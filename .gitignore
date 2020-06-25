@@ -6,3 +6,4 @@ seed/
 old/
 output/
 *.lst
+requests/mail.tem
