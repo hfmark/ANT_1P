@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 
-../bin/FTAN/FTAN_clean/aftani_c_pgl_test aftan.lst
+../bin/aftan/src/aftan_c_test aftan.lst
