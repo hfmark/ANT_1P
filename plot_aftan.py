@@ -197,7 +197,7 @@ if __name__ == '__main__':
 	pdfpath = 'output/FTAN_plots.pdf'
 	if os.path.isfile(pdfpath):
 		iq = input('%s exists. Overwrite? y/[n]' % pdfpath) or 'n'
-	if iq == 'n': sys.exit()
+		if iq == 'n': sys.exit()
 
 	pdf = PdfPages(pdfpath)
 
