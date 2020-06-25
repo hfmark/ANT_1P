@@ -1,0 +1,70 @@
+Patagonia ambient noise tomography
+
+mseed2seed.sh
+	convert miniseed files from IRIS into full seed for seed2cor
+
+generate_seedlist.py
+	make a list of full seed files for input to seed2cor
+
+generate_station_list.py
+	make a list of all stations that have at least one full seed file for input to seed2cor
+
+do_cor.sh
+	run seed2cor on seedfiles.lst and stations.lst
+
+#################################################################
+seismic-noise-tomography/
+	all the scripts and output files for ANT; scripts, at least, are version controlled
+
+#################################################################
+seed/
+	miniseed files with all the input data
+		1P/ and YJ/ are all the IRIS stuff (unpacked but not organized)
+		1P_mn/ YJ_mn/ and ENAP_mn/ are organized by year-month; 1P also has ENAP copied in it
+		*_z is (mostly) just z components
+		datalesss/ is the dataless seed headers for ALL stations, all networks
+	ALSO full seed files created for using seed2cor
+
+#################################################################
+requests/
+	Data_request_*.py
+		script to automate breq_fast requests to IRIS
+	there are two scripts because one was used for the discrete 1P and YJ periods and 
+		the other dealt with the longer-term permanent network data
+
+		For later: when more 1P data is available, you'll want _1_
+
+	decrypt_untar.sh
+		use openssl key to decrypt the embargoed 1P data
+		Note that openssl version matters in interesting ways
+
+	just_untar.sh
+		YJ data (and permanent stations on their own) are not embargoed, hence not encrypted
+
+	northchile_sta.lst
+		YJ stations, for breq_fast request script
+
+	southchile_sta.lst
+		1P and permanent stations, for breq_fast request script
+
+	permanent_sta.lst
+		just the permanent stations, for breq_fast request script
+
+#################################################################
+get_files_for_SNT/
+
+	mini_ENAP.py
+		Copy miniseed day files from Patrick's Antelope database; rename and resample 
+		and rewrite in year-month dirs for pysismo input
+
+	move_minifiles.py
+		move/rename miniseed files from IRIS (decrypted) into year-month dirs for 
+			pysismo input
+
+	z_files.py
+		move Z component 1-month files from each network dir into a central set of dirs
+
+#################################################################
+old/
+	bits and pieces, some pysismo stuff and some other stuff that's all no longer used
+

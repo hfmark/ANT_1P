@@ -1,0 +1,6 @@
+*.swp
+COR/
+seed/
+old/
+output/
+*.lst

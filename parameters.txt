@@ -1,0 +1,54 @@
+# path for rdseed and evalresp excutables 
+rdsexe			/opt/rdseed/5.3.1/rdseed
+evrexe			/P/weisen/local/source/evalresp-3.3.3/evalresp
+# path for station list (NAME lat lon optional_flag)(flag controls which sta-pairs to be ccd) 
+stafname		stations.lst	
+# path for SEED file list
+seedfname		seedfiles.lst
+# channel list ( BHE, LHZ etc.)
+chlst			LHE LHN LHZ #
+# target sampling rate
+sps			1	
+# maximum allowed gap fraction in input sac record
+gapfrac		0.2
+# cut begining time in sec
+t1			1000
+# time length of daily records (in sec), note that if tlen>84000
+tlen			84000
+# bandpass filter
+perl			4
+perh			100
+# temperal normalization method. (0: no norm, 1: onebit, 2: running average, 3: earthquake cutting)
+tnorm_flag		2
+# Earthquake filter (Eperl = -1 for no filter, no effect when tnorm_flag==1)
+Eperl			15
+Eperh			50
+# half len of time window for running average (no effect when tnorm_flag==1)
+timehlen		40
+# half len of frec window for whitening (no norm if set to 0), set to -1. to use input smoothing file.
+frechlen		0.0002
+# input spectrum reshaping signal file (takes effect only when frechlen==-1) DEPRECATED
+fwname			/P/weisen/CODE/ANT/ANT_Ye/SEED2COR_parallel/Stack.smooth
+# turn on/off (1/0) cross-correlation-time-length correction for amplitude TODO
+ftlen			1
+# turn on/off (1/0) precursor signal checking TO BE TESTED!!
+fprcs			0
+# maximum memory fraction to be used. TODO
+memomax		0.6
+# cross-correlation signal half length in sec
+lagtime		3000
+# allowed minimum time length for cross-correlation (takes effect only when ftlen = 1)
+mintlen		20000
+# delete original sac files when set to 1
+fdelosac		1
+# delete am&ph files after cross-correlation when set to 1
+fdelamph		1
+# skip flags: 2 = skip; 1 = skip upon existence of target file. 
+fskipesac		1
+fskipresp		1
+fskipamph		1
+fskipcrco		1
+# 0=only output monthly CC data, 1=only daily, 2=output both
+CorOutflag		0	
+# 0=skip stack all, 1= stack all
+fstackall      	1
