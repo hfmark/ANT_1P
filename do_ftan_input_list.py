@@ -16,7 +16,7 @@ import os, sys
 # tmin, tmax: min and max period for ftan
 # thresh: threshold for catching dispersion curve jumps, usually 10?
 # ffact: multiplicative factor for ftan filter width [alpha = ffact*20.*sqrt(dist/1000.)]
-#	NOTE that this is hard-coded in the driver: 1 for 1st iteration, 2 for 2nd
+#	NOTE that this is hard-coded to 1 in the driver
 # taperl: factor for left-end seismogram tapering: taper = taperl*tmax
 # snr: phase-matching filter parameter, spectra ratio for cutting point
 # fmatch: factor for length of phase matching window
@@ -31,12 +31,12 @@ pp = np.arange(minp,maxp+1)
 minv = 1.7; maxv = 5.2;
 minSNR = 5;
 
-thresh = 20 # 10; 
+thresh = 10 # 20; 
 ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
 f = open('aftan.lst','w')  # output file for input to aftan
 
-for cf in cor_list[100:110]:
+for cf in cor_list[100:150]:
 	# find corresponding snr file, get period range for dispersion curve calc
 	sf = cf+'_s_snr.cv.p.txt'
 	per,snr = np.loadtxt(sf,usecols=(0,1),unpack=True)
