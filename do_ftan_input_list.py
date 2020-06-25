@@ -24,7 +24,7 @@ import os, sys
 ####
 
 cor_list = np.sort(glob('COR/*/*LHZ*LHZ*SAC'))  # list files that we want to process
-phfile = 'phvel_ref/ak135_phvel.dat'
+phfile = 'ak135_phvel.dat'
 
 minp = 3; maxp = 45
 pp = np.arange(minp,maxp+1)
