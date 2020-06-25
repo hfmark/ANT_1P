@@ -190,7 +190,7 @@ def get_ndays(sta1,sta2,root='COR/'):
 
 if __name__ == '__main__':
 
-	done_list = glob('COR/*/*2_AMP')
+	done_list = np.sort(glob('COR/*/*2_AMP'))
 	sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
 	sta2_list = [e.split('/')[-1].split('_')[3] for e in done_list]
 
@@ -204,6 +204,8 @@ if __name__ == '__main__':
 	for i in range(len(sta1_list)):
 		sta1 = sta1_list[i]; sta2 = sta2_list[i]
 		print(sta1,sta2)
+		if sta1 == sta2:
+			continue
 
 		# start plotting
 		fig = plt.figure(figsize=(12,5))
