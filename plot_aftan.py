@@ -40,6 +40,10 @@ def read_AMP(sta1,sta2,nf=2,root='COR/',return_dist=False):
 	grid_x,grid_y = np.mgrid[min(per):max(per), min(vel):max(vel):np.complex(nvel)]
 	amp = griddata(np.vstack((per,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
 	amp = np.flipud(amp.T)
+
+	# normalize each column (better for plotting)
+	for i in range(amp.shape[1]):
+		amp[:,i] = amp[:,i]/max(abs(amp[:,i]))
 	
 	minT = min(np.unique(time)); maxT = max(np.unique(time))
 	vmin = dist/maxT; vmax = dist/minT
