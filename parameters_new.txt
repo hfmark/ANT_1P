@@ -1,7 +1,7 @@
 /opt/rdseed/5.3.1/rdseed					char rdsexe[]:
 /P/weisen/local/source/evalresp-3.3.3/evalresp		char evrexe[]:
 stations.lst							char stalst[]: station list (J23A -129.6825 +44.844 optional_flag)
-seedfoiles.lst						char seedlst[]: SEED file list (down_US_ALL/OBS_BHZ_2012.FEB.29.203762.seed 2012 2 29)
+seedfiles.lst							char seedlst[]: SEED file list (down_US_ALL/OBS_BHZ_2012.FEB.29.203762.seed 2012 2 29)
 LHZ								char ch[]: channel name
 1								int sps: target sampling rate
 0.2								float gapfrac: maximum allowed gap fraction in input sac record
