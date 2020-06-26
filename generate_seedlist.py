@@ -18,7 +18,8 @@ flist = glob('/P/hmark/ANT_1P/seed/1P/*/*.seed')
 for i in range(len(flist)):
 	date = '.'.join(flist[i].split('/')[-2].split('_')[-1].split('.')[:3])
 	d = datetime.strptime(date,'%Y.%b.%d')
-	fs.write('%s  %s  %02d  %02d\n' % (flist[i],str(d.year),d.month,d.day))
+	if d.year == 2018 and d.month < 3:
+		fs.write('%s  %s  %02d  %02d\n' % (flist[i],str(d.year),d.month,d.day))
 
 fs.close()
 sys.exit()
