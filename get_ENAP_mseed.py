@@ -26,8 +26,6 @@ days = np.unique(days_all)
 for dy in days:
 	file_list = dayfiles[np.where(days_all == dy)]  # files for this day, all stations
 
-	sys.exit()
-
 	st = Stream()
 	for fl in file_list:
 		if fl not in bad_files and os.stat(fl).st_size != 0:
