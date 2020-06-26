@@ -20,7 +20,7 @@ bad_files_2 = np.array([mseed_dir_in + '2020/ANMA/ANMA.EN..HH%s.2020.%03d' % (j,
 bad_files = np.append(bad_files_1,bad_files_2)
 
 # get list of all days and of unique days
-days_all = np.array([datetime.strptime(a[-8:],'%Y.%j').strftime('%Y.%m.%d') for a in dayfiles)
+days_all = np.array([datetime.strptime(a[-8:],'%Y.%j').strftime('%Y.%m.%d') for a in dayfiles])
 days = np.unique(days_all)
 
 for dy in days:
