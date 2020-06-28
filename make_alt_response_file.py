@@ -97,6 +97,8 @@ E_net = Network(code='EN',stations=[],\
 E_file = glob('seed/dataless/ENAP*.xml')
 for f in E_file:
 	nsta = read_inventory(f)
+	for ch in nsta.networks[0].stations[0].channels:
+		ch.code = 'L' + ch.code[1:]
 	E_net.stations.append(nsta.networks[0].stations[0])
 inv_all.networks.append(E_net)
 

@@ -37,6 +37,11 @@ for dy in days:
 		else:
 			st.resample(1.0, no_filter=True)
 
+		st.merge(method=1,fill_value=0)  # make sure 1 trace per sta/comp
+
+		for tr in st:  # rename channels to L* to match [edited] dataless
+			tr.stats.channel = 'L' + tr.stats.channel[1:]
+
 		# write miniseed
 		ofile = os.path.join(mseed_dir_out,'EN-%s.%s.%s.mseed' % \
 				(dy.split('.')[0],dy.split('.')[1],dy.split('.')[2]))
