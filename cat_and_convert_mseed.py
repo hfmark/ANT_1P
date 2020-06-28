@@ -36,12 +36,12 @@ for d in days:
 	if d in P_days:
 		fdir = P_dirs[P_days == d][0]
 		flist = glob(fdir+'*.mseed')
-		for ffilei in flist:
+		for ffile in flist:
 			mseed_list.append(ffile)
 	if d in Y_days:
 		fdir = Y_dirs[Y_days == d][0]
 		flist = glob(fdir+'*.mseed')
-		for i in flist:
+		for ffile in flist:
 			mseed_list.append(ffile)
 	if d in E_days:
 		ffile = E_file[E_days==d][0]
