@@ -51,7 +51,7 @@ for d in days:
 	mseed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.mseed'
 	seed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.seed'
 
-	iq = os.system('cat %s > %s' % (cat_str, mseed_ofile)
+	iq = os.system('cat %s > %s' % (cat_str, mseed_ofile))
 	if iq != 0:
 		trouble.append(d)
 		continue
