@@ -49,7 +49,8 @@ for cf in cor_list[62:92]:
 	snr_rs = resamp(pp)
 	usable = pp[np.where(snr_rs > minSNR)]
 
-	f.write('-1 %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f %s %s\n' % \
+	if len(usable) > 0:
+		f.write('-1 %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f %s %s\n' % \
 		(minv, maxv, min(usable), max(usable), thresh, ffact, taperl, fsnr, fmatch, cf, phfile))
 
 f.close()
