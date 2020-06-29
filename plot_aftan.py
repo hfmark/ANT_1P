@@ -226,9 +226,13 @@ if __name__ == '__main__':
 
 		#### un-phase-match-filtered
 		# amplitudes, periods, velocities
-		amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
-		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
-		cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
+		try:
+			amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
+			cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
+			cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
+		except TypeError:  # some file is probably missing
+			plt.close()
+			continue
 		cper_0 = copy(cper); iper_0 = copy(iper)
 
 		gs2 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
