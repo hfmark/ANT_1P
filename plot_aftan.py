@@ -204,7 +204,7 @@ if __name__ == '__main__':
 
 	done_list = np.sort(glob('COR/*2_AMP'))  # only plot sets that *have* a final result
 	sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
-	sta2_list = [e.split('/')[-1].split('_')[3] for e in done_list]
+	sta2_list = [e.split('/')[-1].split('_')[2].split('.')[0] for e in done_list]
 
 	pdfpath = 'output/FTAN_plots.pdf'
 	if os.path.isfile(pdfpath):
