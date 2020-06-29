@@ -89,7 +89,10 @@ def calc_cutoffperiod(sta1,sta2,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,iper=N
 	if gvel is None or iper is None:  # get group vel curve if not given
 		_,iper,gvel,_ = read_DISP(sta1,sta2,nf=nf,itr=itr,root=root)
 
-	cutoffperiod = iper[dist/(wvln*gvel) >= iper].max()
+	try:
+		cutoffperiod = iper[dist/(wvln*gvel) >= iper].max()
+	except ValueError: # no max, basically
+		cutoffperiod = min(iper) - 1  # no good periods here
 
 	return cutoffperiod
 
