@@ -194,7 +194,7 @@ def get_ndays(sta1,sta2,root='COR/'):
 
 if __name__ == '__main__':
 
-	done_list = np.sort(glob('COR/*/*2_AMP'))
+	done_list = np.sort(glob('COR/*2_AMP'))  # only plot sets that *have* a final result
 	sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
 	sta2_list = [e.split('/')[-1].split('_')[3] for e in done_list]
 
