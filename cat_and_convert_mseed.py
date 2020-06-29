@@ -30,7 +30,9 @@ dataless_file = 'seed/dataless/combined.dataless'
 trouble = []
 print(len(days),'days')
 for d in days:
-	if d.year < 2018 or d.year >= 2019:  # for now, just do 2018 (testing for MG* and AY*)
+	if d.year < 2018 or d.year > 2019:
+		continue
+	if d.year == 2019 and d.month > 10:  # 01.2018 - 10.2019 (inclusive)  [test]
 		continue
 	mseed_list = []
 	if d in P_days:
