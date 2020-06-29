@@ -26,12 +26,13 @@ for p in u_pairs:
 	for i in range(len(flist)):
 		if i == 0:
 			st = read(flist[i]) # start the stream with one trace
+			st[0].data = st[0].data*st[0].stats.sac.user0  # weight by ndays
 		else:
 			st1 = read(flist[i])
-			st[0].data = st[0].data + st1[0].data
+			st[0].data = st[0].data + st1[0].data*st1[0].stats.sac.user0
 			st[0].stats.sac.user0 = st[0].stats.sac.user0 + st1[0].stats.sac.user0
 
-	st[0].data = st[0].data/len(flist)
+	st[0].data = st[0].data/st[0].stats.sac.user0
 
 	ofile = os.path.join(odir,'COR_%s.SAC' % p)
 	st.write(ofile,'SAC')
