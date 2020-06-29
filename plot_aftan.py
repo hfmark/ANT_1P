@@ -220,8 +220,8 @@ if __name__ == '__main__':
 		if sta1 == sta2:
 			continue
 		# check for all necessary files:
-		disp = glob('COR/COR_%s_%s_*DISP*' % (sta1, sta2))
-		amp = glob('COR/COR_%s_%s_*AMP*' % (sta1, sta2))
+		disp = glob('COR/COR_%s_%s*DISP*' % (sta1, sta2))
+		amp = glob('COR/COR_%s_%s*AMP*' % (sta1, sta2))
 		if len(disp) != 4 or len(amp) != 2:  # file is probably missing
 			continue
 
