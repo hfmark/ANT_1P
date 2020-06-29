@@ -6,7 +6,7 @@ stafname		stations.lst
 # path for SEED file list
 seedfname		seedfiles.lst
 # channel list ( BHE, LHZ etc.)
-chlst			LHZ
+chlst			LHE LHN LHZ #
 # target sampling rate
 sps			1	
 # maximum allowed gap fraction in input sac record
