@@ -219,6 +219,11 @@ if __name__ == '__main__':
 		print(sta1,sta2)
 		if sta1 == sta2:
 			continue
+		# check for all necessary files:
+		disp = glob('COR/COR_%s_%s_*DISP*' % (sta1, sta2))
+		amp = glob('COR/COR_%s_%s_*AMP*' % (sta1, sta2))
+		if len(disp) != 4 or len(amp) != 2:  # file is probably missing
+			continue
 
 		# start plotting
 		fig = plt.figure(figsize=(12,5))
@@ -226,13 +231,9 @@ if __name__ == '__main__':
 
 		#### un-phase-match-filtered
 		# amplitudes, periods, velocities
-		try:
-			amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
-			cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
-			cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
-		except TypeError:  # some file is probably missing
-			plt.close()
-			continue
+		amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
+		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
+		cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
 		cper_0 = copy(cper); iper_0 = copy(iper)
 
 		gs2 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
