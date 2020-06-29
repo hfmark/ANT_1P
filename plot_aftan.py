@@ -133,18 +133,16 @@ def read_snr_precalc(sta1,sta2,root='COR/'):
 	cper,snr = np.loadtxt(fname,usecols=(0,1),unpack=True)
 	return cper, snr
 
-def find_sta_network(sta,dataless_dir='seed/dataless/'):
+def find_sta_network(sta,root='COR/'):
 	"""
 	find the network code for a given station name, since that info doesn't make it
 	into the seed2cor workflow for both stations of a pair
 	"""
-	assert os.path.isdir(dataless_dir), 'dataless dir not found'
 
-	dataless = glob(os.path.join(dataless_dir,'*.dataless'))
-	stnm = np.array([e.split('/')[-1].split('.')[0].split('-')[1] for e in dataless])
-	networks = np.array([e.split('/')[-1].split('.')[1] for e in dataless])
-	net = networks[stnm==sta][0]
-	return net
+	first_files = glob(root+'COR_*_%s.SAC' % sta)  # files where this is the second station
+	st = read(first_files[0])
+
+	return st[0].stats.network
 
 def plot_basemap(ax=None,coast_shp='shapefiles/SouthAmericaCoasts.shp',\
 		   bbox=[-76,-65,-56,-42]):
