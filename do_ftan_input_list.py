@@ -41,7 +41,7 @@ ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
 f = open('aftan.lst','w')  # output file for input to aftan
 
-for cf in cor_list[62:92]:
+for cf in cor_list[182:222]:
 	# find corresponding snr file, get period range for dispersion curve calc
 	sf = cf+'_s_snr.cv.p.txt'
 	per,snr = np.loadtxt(sf,usecols=(0,1),unpack=True)
