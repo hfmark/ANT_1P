@@ -21,11 +21,11 @@ def read_AMP(sta1,sta2,nf=2,root='COR/',return_dist=False):
 	"""
 	# find amplitude file
 	#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_%i_AMP' % (sta1,sta1,sta2,nf))
-	fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta1,sta2,nf))
+	fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta2,nf))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1  # swap station order and try again
 		#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_%i_AMP' % (sta1,sta1,sta2,nf))
-		fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta1,sta2,nf))
+		fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta2,nf))
 		if not os.path.isfile(fname):
 			print('no AMP file for %s, %s' % (sta1,sta2))
 			return
@@ -63,11 +63,11 @@ def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
 	# nf=1 for pre-phase matched filtering, nf=2 for filtered
 	# itr=0 for initial curves without jump correction, itr=1 for final curves
 	#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_%i_DISP.%i' % (sta1,sta1,sta2,nf,itr))
-	fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta1,sta2,nf,itr))
+	fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1
 		#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_%i_DISP.%i' % (sta1,sta1,sta2,nf,itr))
-		fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta1,sta2,nf,itr))
+		fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
 		if not os.path.isfile(fname):
 			print('no DISP file for %s, %s' % (sta1, sta2))
 			return
@@ -120,11 +120,11 @@ def read_snr_precalc(sta1,sta2,root='COR/'):
 	"""
 	# get snr filename
 	#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_s_snr.cv.p.txt' % (sta1,sta1,sta2))
-	fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta1,sta2))
+	fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta2))
 	if not os.path.exists(fname):
 		sta1, sta2 = sta2, sta1
 		#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_s_snr.cv.p.txt' % (sta1,sta1,sta2))
-		fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta1,sta2))
+		fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta2))
 		if not os.path.exists(fname):
 			print('no snr file found for %s, %s' % (sta1, sta2))
 			return
@@ -185,11 +185,11 @@ def get_ndays(sta1,sta2,root='COR/'):
 	get number of stacked days in xcor for a pair of stations from sac header
 	"""
 	#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_s' % (sta1,sta1,sta2))
-	fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta1,sta2))
+	fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta2))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1
 		#fname = os.path.join(root,'%s/COR_%s_LHZ_%s_LHZ.SAC_s' % (sta1,sta1,sta2))
-		fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta1,sta2))
+		fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta2))
 		if not os.path.isfile(fname):
 			print('no symmetric xcor file found for %s, %s' % (sta1, sta2))
 			return
