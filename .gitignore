@@ -7,3 +7,6 @@ old/
 output/
 *.lst
 requests/mail.tem
+step.txt
+junk_*
+rdseed.err_log
