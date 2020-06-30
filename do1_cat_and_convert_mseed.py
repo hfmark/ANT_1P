@@ -29,7 +29,10 @@ dataless_file = 'seed/dataless/combined.dataless'
 
 trouble = []
 print(len(days),'days')
-for d in days:
+for i in range(len(days)):
+	d = days[i]
+	if i%50==0: print(i,d.strftime('%Y.%m.%d'))
+
 	mseed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.mseed'
 	seed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.seed'
 	if os.path.isfile(mseed_ofile) and os.path.isfile(seed_ofile):
