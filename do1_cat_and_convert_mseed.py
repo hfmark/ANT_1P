@@ -30,10 +30,12 @@ dataless_file = 'seed/dataless/combined.dataless'
 trouble = []
 print(len(days),'days')
 for d in days:
-	if d.year < 2018 or d.year > 2019:
-		continue
-	if d.year == 2019 and d.month > 10:  # 01.2018 - 10.2019 (inclusive)  [test]
-		continue
+	mseed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.mseed'
+	seed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.seed'
+	if os.path.isfile(mseed_ofile) and os.path.isfile(seed_ofile):
+		continue  # skip days that are done already
+		# NOTE that if you want to redo days you need to delete existing files
+
 	mseed_list = []
 	if d in P_days:
 		fdir = P_dirs[P_days == d][0]
@@ -50,8 +52,6 @@ for d in days:
 		mseed_list.append(ffile)
 
 	cat_str = ' '.join(mseed_list)  # string of miniseed files to be catted
-	mseed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.mseed'
-	seed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.seed'
 
 	iq = os.system('cat %s > %s' % (cat_str, mseed_ofile))
 	if iq != 0:
