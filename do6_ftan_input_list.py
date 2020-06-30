@@ -24,9 +24,7 @@ import os, sys
 ####
 
 cor_list = np.sort(glob('COR/*/*LHZ*LHZ*SAC'))  # list files that we want to process
-#cor_list = np.sort(glob('COR/*SAC'))  # list files that we want to process
 sta1_lst = np.array([e.split('/')[-1].split('_')[1] for e in cor_list])
-#sta2_lst = np.array([e.split('/')[-1].split('_')[2].split('.')[0] for e in cor_list])
 sta2_lst = np.array([e.split('/')[-1].split('_')[3] for e in cor_list])
 twosta = sta1_lst != sta2_lst  # don't use autocorrelations
 cor_list = cor_list[twosta]
@@ -43,7 +41,7 @@ ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
 f = open('aftan.lst','w')  # output file for input to aftan
 
-for cf in cor_list[182:222]:
+for cf in cor_list:
 	# find corresponding snr file, get period range for dispersion curve calc
 	sf = cf+'_s_snr.cv.p.txt'
 	per,snr = np.loadtxt(sf,usecols=(0,1),unpack=True)
