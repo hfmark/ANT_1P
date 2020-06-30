@@ -8,7 +8,6 @@ import os, sys
 ####
 
 cor_list = glob('COR/*/*LHZ*LHZ*SAC')  # skip other components and derivative files
-#cor_list = glob('COR/*SAC')
 
 for ifile in cor_list:
 	xc = read(ifile,'SAC')
