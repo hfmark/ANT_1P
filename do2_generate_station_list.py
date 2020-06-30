@@ -1,49 +1,28 @@
 import numpy as np
 from glob import glob
+from obspy import read_inventory
 import os, sys
 
 ####
 # write a station list (name, lat, lon) for seed2cor
+# NOTE that this is for the old version of seed2cor; I think the new version wants (name, lon, lat)??
 ####
 
-# get list of unique stations for 1P/etc and ENAP, along with a representative seed file for each
-# rdseed -S -f [filename] > junk
-# from rdseed.stations, get name and coords and write to another file
+# get all the station info
+inv = read_inventory('seed/dataless/combined.xml')
+
+# find unique stations (channel doesn't matter; they're all co-located anyway)
+ok_sid = np.array(inv.get_contents()['channels'])
+_,inds = np.unique(np.array([e.split('.')[1] for e in ok_sid]),return_index=True)
+sid = ok_sid[inds]
 
 # open station list file for writing
 fs = open('stations.lst','w')
 
-# find a single seed file for each unique station
-sfiles = glob('/P/hmark/ANT_1P/seed/1P/*/*.seed')
-stations = [a.split('/')[-1].split('.')[0] for a in sfiles]
-stations,inds = np.unique(stations,return_index=True)
-
-for i in range(len(stations)):
-	os.system('rdseed -S -f %s > junk' % sfiles[inds[i]])
-
-	with open('rdseed.stations','r') as f: line = f.readline()
-
-	line = line.split()
-	fs.write('%s  %s  %s\n' % (line[0],line[2],line[3]))
-
-fs.close()
-sys.exit()
-
-
-
-
-
-
-sfiles = glob('/P/hmark/ANT_1P/seed/ENAP/*.seed')
-stations = [a.split('/')[-1].split('.')[1] for a in sfiles]
-stations,inds = np.unique(stations,return_index=True)
-
-for i in range(len(stations)):
-	os.system('rdseed -S -f %s > junk' % sfiles[inds[i]])
-
-	with open('rdseed.stations','r') as f: line = f.readline()
-
-	line = line.split()
-	fs.write('%s  %s  %s\n' % (line[0],line[2],line[3]))
+# loop stations and write
+for s in sid:
+	crd = inv.get_coordinates(s)
+	sta = s.split('.')[1]
+	fs.write('%s  %.4f  %.4f\n' % (sta,crd['latitude'],crd['longitude']))
 
 fs.close()
