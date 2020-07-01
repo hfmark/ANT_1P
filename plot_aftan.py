@@ -225,6 +225,9 @@ if __name__ == '__main__':
 		# amplitudes, periods, velocities
 		amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
 		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
+		if min(iper) == max(iper):  # singularity!! oops
+			plt.close()
+			continue
 		cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
 		cper_0 = copy(cper); iper_0 = copy(iper)
 
