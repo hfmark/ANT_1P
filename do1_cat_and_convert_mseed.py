@@ -1,6 +1,7 @@
 import numpy as np
 from glob import glob
 from datetime import datetime
+from obspy import read, read_inventory
 import os, sys
 
 ####
@@ -28,6 +29,10 @@ days = np.unique(np.hstack((P_days,Y_days,E_days)))
 dataless_file = 'seed/dataless/combined.dataless'
 
 trouble = []
+
+yj_rotate = ['IBJ01','IMG01','MEL01'] # YJ stations that need to be rotated to ZNE
+inv = read_inventory('seed/dataless/combined.xml')
+
 print(len(days),'days')
 for i in range(len(days)):
 	d = days[i]
@@ -49,7 +54,14 @@ for i in range(len(days)):
 		fdir = Y_dirs[Y_days == d][0]
 		flist = glob(fdir+'*.mseed')
 		for ffile in flist:
-			mseed_list.append(ffile)
+			if ffile.split('/')[-1].split('.')[0] in yj_rotate:  # Z/2/3 to Z/N/E
+				ffile2 = '.'.join(['ZNE',ffile])
+				st = read(ffile)
+				st.rotate('->ZNE', inventory=inv, components='Z23')
+				st.write(ffile2,format='MSEED')
+				mseed_list.append(ffile2)
+			else:
+				mseed_list.append(ffile)
 	if d in E_days:
 		ffile = E_file[E_days==d][0]
 		mseed_list.append(ffile)
