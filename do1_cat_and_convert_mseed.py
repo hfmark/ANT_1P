@@ -60,7 +60,9 @@ for i in range(len(days)):
 				ffile2 = '/'.join(ffile_parts)
 				st = read(ffile)
 				st.rotate('->ZNE', inventory=inv, components='Z23')
-				st.write(ffile2,format='MSEED')
+				for tr in st:
+					tr.data = np.require(tr.data, dtype=np.int32)
+				st.write(ffile2,format='MSEED',encoding='STEIM2')
 				mseed_list.append(ffile2)
 			else:
 				mseed_list.append(ffile)
