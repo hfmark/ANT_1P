@@ -1,6 +1,7 @@
 import numpy as np
 from obspy import read_inventory, UTCDateTime
 from obspy.core.inventory import Inventory, Network, Station, Channel, Site
+from obspy.core.inventory.util import Azimuth
 from glob import glob
 import os, sys
 
@@ -76,6 +77,7 @@ inv_all.networks.append(P_net)
 del P_read  # cleanup
 
 # read YJ, find insts, add just those
+yj_rotate = ['IBJ01','IMG01','MEL01']  # LHZ/2/3 stations; add extra 'rotated' channels
 Y_read = read_inventory('seed/dataless/YJ.xml')
 Y_file = glob('seed/dataless/IRISDMC*.YJ.dataless')
 Y_inst = [e.split('/')[-1].split('-')[-1].split('.')[0] for e in Y_file]
@@ -84,6 +86,14 @@ Y_net = Y_read.networks[0].select(station='X').copy()  # just the network
 bad_sta = []
 for i in Y_inst:
 	sta = Y_read.networks[0].select(station=i).stations[0]
+	if i in yj_rotate:
+		# copy LH2 and LH3 channels
+		l2 = Y_read.select(station=i,channel='LH2').networks[0].stations[0].channels[0].copy()
+		l3 = Y_read.select(station=i,channel='LH3').networks[0].stations[0].channels[0].copy()
+		l2.code = 'LHE'; l2.azimuth = Azimuth(90.0)
+		l3.code = 'LHN'; l3.azimuth = Azimuth(0.0)
+		sta.channels.append(l2)
+		sta.channels.append(l3)
 	Y_net.stations.append(sta)
 inv_all.networks.append(Y_net)
 
