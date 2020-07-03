@@ -55,7 +55,9 @@ for i in range(len(days)):
 		flist = glob(fdir+'*.mseed')
 		for ffile in flist:
 			if ffile.split('/')[-1].split('.')[0] in yj_rotate:  # Z/2/3 to Z/N/E
-				ffile2 = '.'.join(['ZNE',ffile])
+				ffile_parts = ffile.split('/')
+				ffile_parts[-1] = '.'.join(('ZNE',ffile_parts[-1]))
+				ffile2 = '/'.join(ffile_parts)
 				st = read(ffile)
 				st.rotate('->ZNE', inventory=inv, components='Z23')
 				st.write(ffile2,format='MSEED')
