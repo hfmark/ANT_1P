@@ -59,11 +59,14 @@ for i in range(len(days)):
 				ffile_parts[-1] = '.'.join(('ZNE',ffile_parts[-1]))
 				ffile2 = '/'.join(ffile_parts)
 				st = read(ffile)
-				st.rotate('->ZNE', inventory=inv, components='Z23')
-				for tr in st:
-					tr.data = np.require(tr.data, dtype=np.int32)
-				st.write(ffile2,format='MSEED',encoding='STEIM2')
-				mseed_list.append(ffile2)
+				try:
+					st.rotate('->ZNE', inventory=inv, components='Z23')
+					for tr in st:
+						tr.data = np.require(tr.data, dtype=np.int32)
+					st.write(ffile2,format='MSEED',encoding='STEIM2')
+					mseed_list.append(ffile2)
+				except ValueError:  # time mismatch????
+					pass  # do not pass go, do not append filename
 			else:
 				mseed_list.append(ffile)
 	if d in E_days:
