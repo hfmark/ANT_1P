@@ -23,6 +23,7 @@ fs = open('stations.lst','w')
 for s in sid:
 	crd = inv.get_coordinates(s)
 	sta = s.split('.')[1]
-	fs.write('%s  %.4f  %.4f\n' % (sta,crd['latitude'],crd['longitude']))
+	#fs.write('%s  %.4f  %.4f\n' % (sta,crd['latitude'],crd['longitude']))
+	fs.write('%s  %.4f  %.4f\n' % (sta,crd['longitude'],crd['latitude']))  # reversed for new s2c
 
 fs.close()

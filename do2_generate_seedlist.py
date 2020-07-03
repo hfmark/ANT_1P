@@ -18,6 +18,7 @@ flist = glob('/P/hmark/ANT_1P/seed/dayfiles/*.seed')
 for i in range(len(flist)):
 	date = '.'.join(flist[i].split('/')[-1].split('_')[-1].split('.')[:3])
 	d = datetime.strptime(date,'%Y.%m.%d')
-	fs.write('%s  %s  %02d  %02d\n' % (flist[i],str(d.year),d.month,d.day))
+	if d.year == 2019:
+		fs.write('%s  %s  %02d  %02d\n' % (flist[i],str(d.year),d.month,d.day))
 
 fs.close()
