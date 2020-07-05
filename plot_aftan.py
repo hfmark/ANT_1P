@@ -143,7 +143,10 @@ def find_sta_network(sta,root='COR/'):
 	"""
 
 	#first_files = glob(root+'*/COR_*_LHZ_%s_LHZ.SAC' % sta)  # files where this is the second station
-	first_files = glob(root+'COR_*_%s.SAC' % sta)  # files where this is the second station
+	first_files = glob(root+'/COR_*_%s.SAC' % sta)  # files where this is the second station
+	if len(first_files) == 0:
+		return 'UNKN'
+
 	st = read(first_files[0])
 
 	return st[0].stats.network
