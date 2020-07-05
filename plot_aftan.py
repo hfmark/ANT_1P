@@ -219,7 +219,6 @@ if __name__ == '__main__':
 
 	for i in range(len(sta1_list)):
 		sta1 = sta1_list[i]; sta2 = sta2_list[i]
-		print(sta1,sta2)
 		if sta1 == sta2:
 			continue
 		# check for all necessary files:
@@ -228,7 +227,9 @@ if __name__ == '__main__':
 		#amp = glob('COR/*/COR_%s_LHZ_%s_LHZ*AMP*' % (sta1, sta2))
 		amp = glob('COR/COR_%s_%s*AMP*' % (sta1, sta2))
 		if len(disp) != 4 or len(amp) != 2:  # file is probably missing
+			print('skipping %s-%s, some files missing' % (sta1,sta2))
 			continue
+		print(sta1,sta2)
 
 		# start plotting
 		fig = plt.figure(figsize=(12,5))
