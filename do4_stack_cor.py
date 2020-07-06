@@ -71,7 +71,3 @@ for p in u_pairs:
 		st[0].data = st[0].data/st[0].stats.sac.user0
 
 		st.write(ofile,'SAC')
-
-	sys.exit()
-
-		
