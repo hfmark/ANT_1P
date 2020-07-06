@@ -39,7 +39,7 @@ for p in u_pairs:
 
 	st[0].data = st[0].data/st[0].stats.sac.user0
 
-	ofile = os.path.join(odir,'COR_%s.SAC' % p)
+	ofile = os.path.join(odir,'COR_%s_full.SAC' % p)
 	st.write(ofile,'SAC')
 
 	# now sort in order of time, get overlapping 3-month segments, and stack those
