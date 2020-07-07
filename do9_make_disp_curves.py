@@ -3,6 +3,7 @@ import pytomo.anttomo as ant
 from obspy import read_inventory
 from glob import glob
 import pickle
+import os, sys
 
 ####
 # read aftan outputs, construct DispersionCurve() objects, pickle
@@ -20,6 +21,7 @@ for p in pairs:
     # check: do we have the final aftan outputs? *_full.SAC_2_DISP.1
     disp2file = 'COR/COR_%s_full.SAC_2_DISP.1' % p
     if not os.path.isfile(disp2file):
+        print('%s is unfinished' % p)
         continue  # skip this pair
 
     print(p)
