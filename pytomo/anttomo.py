@@ -147,15 +147,15 @@ class VelocityMap:
         new_qc = np.array([minspectSNR, minwavelengthfactor])
         for c in dispersion_curves:
             old_qc = np.array([c.minspectSNR, c.minwavelengthfactor])
-            if np.any(abs(new_qc - old_qc)/old_qc) > 0.05 or \
-			usewavelengthcutoff != c.usewavelengthcutoff:
+            if np.any(abs(new_qc - old_qc)/old_qc) > 0.05:
                 c.update_parameters(minspectSNR=minspectSNR,
                                     minwavelengthfactor=minwavelengthfactor)
 
         # valid dispersion curves (velocity != nan at period) and
         # associated interstation distances
         self.disp_curves = [c for c in dispersion_curves
-                            if not np.isnan(c.filtered_vel_sdev_SNR(self.period,vtype=self.vtype)[0])]
+                            if not np.isnan(c.filtered_vel_sdev_SNR(self.period,vtype=self.vtype)[0])
+                            and np.isfinite(c.filtered_vel_sdev_SNR(self.period,vtype=self.vtype)[0])]
 
         if not self.disp_curves:
             s = "No valid velocity at selected period ({} sec)"
@@ -168,8 +168,7 @@ class VelocityMap:
                                 for c in self.disp_curves])
         vels = np.array(vels)
         sigmav = np.array(sigmav)
-        #sigmav_isnan = np.isnan(sigmav)  # this shouldn't be a problem b/c of interp?
-        # (that is, if vel is not nan and we're using this curve, sdev will also not be nan)
+        sigmav_isnan = np.isnan(sigmav)
 
 ########################################################################
 # NOTE [skipping this part for now because the velocity step isn't constant anymore]
@@ -190,11 +189,11 @@ class VelocityMap:
         #sigmav[~sigmav_isnan] = np.maximum(sigmav[~sigmav_isnan],
         #                                   minsigmav[~sigmav_isnan])
 
+########################################################################
         # where std dev cannot be estimated (std dev = nan),
         # assigning 3 times the mean std dev of the period
         # following Bensen et al. (2008)
-        #sigmav[sigmav_isnan] = 3 * sigmav[~sigmav_isnan].mean()
-########################################################################
+        sigmav[sigmav_isnan] = 3 * sigmav[~sigmav_isnan].mean()
 
         # ======================================================
         # setting up reference velocity and data vector
@@ -1061,7 +1060,11 @@ class DispersionCurve:
     def _get_cutoff_period(self):
         goodperiods = np.nan_to_num(self.dist() / (self.minwavelengthfactor * self.vgroup))
         ok = self.periods <= goodperiods
-        return max(self.periods[ok])
+        try:
+            cutoff = max(self.periods[ok])
+        except ValueError:  # no max, nothing above cutoff
+            cutoff = self.periods[0] - 1
+        return cutoff
 
 
     def filtered_vels(self,vtype='phase'):
