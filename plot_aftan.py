@@ -20,10 +20,10 @@ def read_AMP(sta1,sta2,nf=2,root='COR/',return_dist=False):
 	return array where each row is a velocity and each column is a period
 	"""
 	# find amplitude file
-	fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta2,nf))
+	fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_AMP' % (sta1,sta2,nf))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1  # swap station order and try again
-		fname = os.path.join(root,'COR_%s_%s.SAC_%i_AMP' % (sta1,sta2,nf))
+		fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_AMP' % (sta1,sta2,nf))
 		if not os.path.isfile(fname):
 			print('no AMP file for %s, %s' % (sta1,sta2))
 			return
@@ -60,10 +60,10 @@ def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
 	# find disp file:
 	# nf=1 for pre-phase matched filtering, nf=2 for filtered
 	# itr=0 for initial curves without jump correction, itr=1 for final curves
-	fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
+	fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1
-		fname = os.path.join(root,'COR_%s_%s.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
+		fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
 		if not os.path.isfile(fname):
 			print('no DISP file for %s, %s' % (sta1, sta2))
 			return
@@ -92,36 +92,15 @@ def calc_cutoffperiod(sta1,sta2,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,iper=N
 
 	return cutoffperiod
 
-def read_input_vrange(sta1,sta2,ifile='aftan.lst'):
-	"""
-	read input params from aftan.lst
-	return velocity range parameters used for ftan so axes of amplitude plot can be set
-	"""
-	assert os.path.isfile(ifile),'input file %s not found' % ifile
-
-	vmin,vmax = np.loadtxt(ifile,usecols=(1,2),unpack=True)
-	corfiles = np.loadtxt(ifile,usecols=(10,),dtype=str)
-	sta1_list = np.array([e.split('/')[-1].split('_')[1] for e in corfiles])
-	sta2_list = np.array([e.split('/')[-1].split('_')[3] for e in corfiles])
-	ind = np.where(np.logical_and(sta1_list==sta1,sta2_list==sta2))[0]
-	if len(ind) == 0:
-		sta1, sta2 = sta2, sta1
-		ind = np.where(np.logical_and(sta1_list==sta1,sta2_list==sta2))[0]
-		if len(ind) == 0:
-			print('station pair %s, %s not found in %s' % (sta1, sta2, ifile))
-			return
-
-	return vmin[ind[0]],vmax[ind[0]]
-
 def read_snr_precalc(sta1,sta2,root='COR/'):
 	"""
 	read snr calculated prior to ftan (referenced to center periods)
 	"""
 	# get snr filename
-	fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta2))
+	fname = os.path.join(root,'COR_%s_%s_full.SAC_s_snr.cv.p.txt' % (sta1,sta2))
 	if not os.path.exists(fname):
 		sta1, sta2 = sta2, sta1
-		fname = os.path.join(root,'COR_%s_%s.SAC_s_snr.cv.p.txt' % (sta1,sta2))
+		fname = os.path.join(root,'COR_%s_%s_full.SAC_s_snr.cv.p.txt' % (sta1,sta2))
 		if not os.path.exists(fname):
 			print('no snr file found for %s, %s' % (sta1, sta2))
 			return
@@ -136,7 +115,7 @@ def find_sta_network(sta,root='COR/'):
 	into the seed2cor workflow for both stations of a pair
 	"""
 
-	first_files = glob(root+'/COR_*_%s.SAC' % sta)  # files where this is the second station
+	first_files = glob(root+'/COR_*_%s_full.SAC' % sta)  # files where this is the second station
 	if len(first_files) == 0:
 		return 'UNKN'
 
@@ -182,10 +161,10 @@ def get_ndays(sta1,sta2,root='COR/'):
 	"""
 	get number of stacked days in xcor for a pair of stations from sac header
 	"""
-	fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta2))
+	fname = os.path.join(root,'COR_%s_%s_full.SAC_s' % (sta1,sta2))
 	if not os.path.isfile(fname):
 		sta1, sta2 = sta2, sta1
-		fname = os.path.join(root,'COR_%s_%s.SAC_s' % (sta1,sta2))
+		fname = os.path.join(root,'COR_%s_%s_full.SAC_s' % (sta1,sta2))
 		if not os.path.isfile(fname):
 			print('no symmetric xcor file found for %s, %s' % (sta1, sta2))
 			return
@@ -194,11 +173,9 @@ def get_ndays(sta1,sta2,root='COR/'):
 
 	return xc[0].stats.sac.user0
 	
-	
-
 if __name__ == '__main__':
 
-	done_list = np.sort(glob('COR/*2_AMP'))  # only plot sets that *have* a final result
+	done_list = np.sort(glob('COR/*full*2_AMP'))  # only plot sets that *have* a final result
 	sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
 	sta2_list = [e.split('/')[-1].split('_')[2].split('.')[0] for e in done_list]
 
@@ -214,8 +191,8 @@ if __name__ == '__main__':
 		if sta1 == sta2:
 			continue
 		# check for all necessary files:
-		disp = glob('COR/COR_%s_%s*DISP*' % (sta1, sta2))
-		amp = glob('COR/COR_%s_%s*AMP*' % (sta1, sta2))
+		disp = glob('COR/COR_%s_%s*full*DISP*' % (sta1, sta2))
+		amp = glob('COR/COR_%s_%s*full*AMP*' % (sta1, sta2))
 		if len(disp) != 4 or len(amp) != 2:  # file is probably missing
 			print('skipping %s-%s, some files missing' % (sta1,sta2))
 			continue
