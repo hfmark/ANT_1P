@@ -199,7 +199,8 @@ if __name__ == '__main__':
 		#### un-phase-match-filtered
 		# amplitudes, periods, velocities
 		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
-		amp,vmin,vmax,dist = read_AMP(sta1,sta2,iper,nf=1,return_dist=True)
+		_,iper_amp,_,_ = read_DISP(sta1,sta2,nf=1,itr=0)
+		amp,vmin,vmax,dist = read_AMP(sta1,sta2,iper_amp,nf=1,return_dist=True)
 		if min(iper) == max(iper):  # singularity!! oops
 			plt.close()
 			continue
@@ -209,7 +210,7 @@ if __name__ == '__main__':
 		gs2 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
 		ax2 = fig.add_subplot(gs2[0,0])
 
-		ax2.imshow(amp,extent=[min(iper),max(iper),vmin,vmax],aspect='auto')
+		ax2.imshow(amp,extent=[min(iper_amp),max(iper_amp),vmin,vmax],aspect='auto')
 		ax2.plot(iper,gvel,color='k',label='group')
 		ax2.plot(iper,pvel,color='r',label='phase')
 		ax2.plot([cfp,cfp],[vmin,vmax],color='grey')
@@ -223,13 +224,14 @@ if __name__ == '__main__':
 		#### clean FTAN and clean curves
 		# amplitudes, periods, velocities
 		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=2,itr=1)
-		amp,vmin,vmax = read_AMP(sta1,sta2,iper,nf=2)
+		_,iper_amp,_,_ = read_DISP(sta1,sta2,nf=2,itr=0)
+		amp,vmin,vmax = read_AMP(sta1,sta2,iper_amp,nf=2)
 		cfp = calc_cutoffperiod(sta1,sta2,dist,nf=2,itr=1,gvel=gvel,iper=iper)
 
 		gs3 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
 		ax3 = fig.add_subplot(gs3[0,0])
 
-		ax3.imshow(amp,extent=[min(iper),max(iper),vmin,vmax],aspect='auto')
+		ax3.imshow(amp,extent=[min(iper_amp),max(iper_amp),vmin,vmax],aspect='auto')
 		ax3.plot(iper,gvel,color='k',label='group')
 		ax3.plot(iper,pvel,color='r',label='phase')
 		ax3.plot([cfp,cfp],[vmin,vmax],color='grey')
