@@ -6,7 +6,7 @@ import shapefile
 from scipy.interpolate import interp1d, griddata
 from copy import copy
 from glob import glob
-from obspy import read
+from obspy import read, read_inventory
 import os, sys
 
 ####
@@ -14,7 +14,7 @@ import os, sys
 # (maybe with station info/map/xcors as in pysismo?)
 ####
 
-def read_AMP(sta1,sta2,nf=2,root='COR/',return_dist=False):
+def read_AMP(sta1,sta2,iper,nf=2,root='COR/',return_dist=False):
 	"""
 	read amplitudes from aftan output file
 	return array where each row is a velocity and each column is a period
@@ -36,9 +36,11 @@ def read_AMP(sta1,sta2,nf=2,root='COR/',return_dist=False):
 
 	# get amplitudes from file, resample on a regular velocity grid
 	per,time,ampT = np.loadtxt(fname,usecols=(0,1,2),unpack=True,skiprows=1)
-	vel = dist/np.unique(time)  # times are even (TODO: are they???), vels are uneven!
-	grid_x,grid_y = np.mgrid[min(per):max(per), min(vel):max(vel):np.complex(nvel)]
-	amp = griddata(np.vstack((per,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
+	vel = dist/np.unique(time)  # times are even, vels are uneven!
+	# periods are also uneven, fix that too
+	iper_long = iper[per.astype(int)-1]
+	grid_x,grid_y = np.mgrid[min(iper):max(iper):np.complex(nper), min(vel):max(vel):np.complex(nvel)]
+	amp = griddata(np.vstack((iper_long,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
 	amp = np.flipud(amp.T)
 
 	# normalize each column (better for plotting)
@@ -73,15 +75,12 @@ def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
 
 	return cper, iper, gvel, pvel
 
-def calc_cutoffperiod(sta1,sta2,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,iper=None,dist=None):
+def calc_cutoffperiod(sta1,sta2,dist,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,iper=None):
 	"""
 	find the max period we want to use for a given station pair based on 
 	station spacing and a minimum number of wavelengths and the estimated group velocities
 	"""
 	# TODO: iper or cper???? probably iper
-	if dist is None:  # get station spacing if not given
-		_,_,_,dist = read_AMP(sta1,sta2,nf=nf,root=root,return_dist=True)
-
 	if gvel is None or iper is None:  # get group vel curve if not given
 		_,iper,gvel,_ = read_DISP(sta1,sta2,nf=nf,itr=itr,root=root)
 
@@ -109,19 +108,12 @@ def read_snr_precalc(sta1,sta2,root='COR/'):
 	cper,snr = np.loadtxt(fname,usecols=(0,1),unpack=True)
 	return cper, snr
 
-def find_sta_network(sta,root='COR/'):
+def find_sta_network(sta,inv):
 	"""
 	find the network code for a given station name, since that info doesn't make it
 	into the seed2cor workflow for both stations of a pair
 	"""
-
-	first_files = glob(root+'/COR_*_%s_full.SAC' % sta)  # files where this is the second station
-	if len(first_files) == 0:
-		return 'UNKN'
-
-	st = read(first_files[0])
-
-	return st[0].stats.network
+	return inv.select(station=sta).networks[0].code
 
 def plot_basemap(ax=None,coast_shp='shapefiles/SouthAmericaCoasts.shp',\
 		   bbox=[-76,-65,-56,-42]):
@@ -186,6 +178,8 @@ if __name__ == '__main__':
 
 	pdf = PdfPages(pdfpath)
 
+	inv = read_inventory('seed/dataless/combined.xml')
+
 	for i in range(len(sta1_list)):
 		sta1 = sta1_list[i]; sta2 = sta2_list[i]
 		if sta1 == sta2:
@@ -204,12 +198,12 @@ if __name__ == '__main__':
 
 		#### un-phase-match-filtered
 		# amplitudes, periods, velocities
-		amp,vmin,vmax,dist = read_AMP(sta1,sta2,nf=1,return_dist=True)
 		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=1,itr=1)
+		amp,vmin,vmax,dist = read_AMP(sta1,sta2,iper,nf=1,return_dist=True)
 		if min(iper) == max(iper):  # singularity!! oops
 			plt.close()
 			continue
-		cfp = calc_cutoffperiod(sta1,sta2,nf=1,itr=1,gvel=gvel,iper=iper)
+		cfp = calc_cutoffperiod(sta1,sta2,dist,nf=1,itr=1,gvel=gvel,iper=iper)
 		cper_0 = copy(cper); iper_0 = copy(iper)
 
 		gs2 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
@@ -228,9 +222,9 @@ if __name__ == '__main__':
 
 		#### clean FTAN and clean curves
 		# amplitudes, periods, velocities
-		amp,vmin,vmax = read_AMP(sta1,sta2,nf=2)
 		cper,iper,gvel,pvel = read_DISP(sta1,sta2,nf=2,itr=1)
-		cfp = calc_cutoffperiod(sta1,sta2,nf=2,itr=1,gvel=gvel,iper=iper)
+		amp,vmin,vmax = read_AMP(sta1,sta2,iper,nf=2)
+		cfp = calc_cutoffperiod(sta1,sta2,dist,nf=2,itr=1,gvel=gvel,iper=iper)
 
 		gs3 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
 		ax3 = fig.add_subplot(gs3[0,0])
@@ -286,8 +280,8 @@ if __name__ == '__main__':
 
 		# plot title
 		ndays = get_ndays(sta1,sta2)
-		fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1), sta1, \
-					find_sta_network(sta2), sta2, dist, ndays), fontsize=14)
+		fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1,inv), sta1, \
+					find_sta_network(sta2,inv), sta2, dist, ndays), fontsize=14)
 
 		pdf.savefig(fig)
 		plt.close()
