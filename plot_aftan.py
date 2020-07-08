@@ -40,7 +40,13 @@ def read_AMP(sta1,sta2,iper,nf=2,root='COR/',return_dist=False):
 	# periods are also uneven, fix that too
 	iper_long = iper[per.astype(int)-1]
 	grid_x,grid_y = np.mgrid[min(iper):max(iper):np.complex(nper), min(vel):max(vel):np.complex(nvel)]
-	amp = griddata(np.vstack((iper_long,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
+	try:
+		amp = griddata(np.vstack((iper_long,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
+	except:
+		grid_x,grid_y = np.mgrid[min(per):max(per), min(vel):max(vel):np.complex(nvel)]
+		amp = griddata(np.vstack((per,dist/time)).T,ampT,(grid_x,grid_y),method='linear')
+		print('periods are off here')
+		
 	amp = np.flipud(amp.T)
 
 	# normalize each column (better for plotting)
