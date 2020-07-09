@@ -1565,8 +1565,8 @@ def norm(u):
 # plot basemap with shapefiles
 ########################################################################
 
-def basemap(coastfile=None, tectfile=None, tectlabels=None, tectcolors=None, \
-            ax=None, labels=True, axeslabels=True, fill=True, bbox=None):
+def basemap(coastfile='shapefiles/SouthAmericaCoasts.shp', tectfile=None, tectlabels=None, 
+            tectcolors=None, ax=None, labels=True, axeslabels=True, fill=True, bbox=None):
     """
     Plots base map: coasts (file *coastfile*), tectonic provinces
     file  *tectfile*) and labels (file *tectlabels*). Labels are
