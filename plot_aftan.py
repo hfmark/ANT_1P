@@ -144,16 +144,12 @@ def plot_basemap(ax=None,coast_shp='shapefiles/SouthAmericaCoasts.shp',\
 
 	return
 
-def get_sta_coords(sta,listfile='stations.lst'):
+def get_sta_coords(sta,inv):
 	"""
-	retrieve station coords from list used as seed2cor input
+	retrieve station coords from inv
 	"""
-	assert os.path.isfile(listfile),'%s not found' % listfile
-
-	stnm = np.loadtxt(listfile,usecols=(0,),dtype=str)
-	lat,lon = np.loadtxt(listfile,usecols=(1,2),unpack=True)
-
-	return lat[stnm==sta][0],lon[stnm==sta][0]
+	ista = inv.select(station=sta).networks[0].stations[0]
+	return ista.latitude, ista.longitude
 
 def get_ndays(sta1,sta2,root='COR/'):
 	"""
@@ -264,7 +260,7 @@ if __name__ == '__main__':
 		gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
 		ax4 = fig.add_subplot(gs4[0,0])
 		plot_basemap(ax4)
-		ll1 = get_sta_coords(sta1); ll2 = get_sta_coords(sta2); nm = (sta1,sta2)
+		ll1 = get_sta_coords(sta1,inv); ll2 = get_sta_coords(sta2,inv); nm = (sta1,sta2)
 		x = (ll1[1],ll2[1]); y = (ll1[0],ll2[0])
 		ax4.plot(x,y,'^-',color='k',ms=10,mfc='w',mew=1,zorder=100)
 		for lon,lat,label in zip(x, y, nm):
