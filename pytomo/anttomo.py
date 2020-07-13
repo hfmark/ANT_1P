@@ -2,7 +2,7 @@ import numpy as np
 import itertools as it  # only used in checkerboard tests
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from scipy.interpolate import interp1d
+from scipy.interpolate import interp1d, interp2d
 from copy import deepcopy, copy
 from inspect import getargspec
 from matplotlib.colors import LinearSegmentedColormap, ColorConverter
@@ -1132,6 +1132,75 @@ class DispersionCurve:
         sdev_val = sdev_interp(period)
 
         return v_val, sdev_val, snr_val
+
+########################################################################
+# class for holding EQ tomo maps
+########################################################################
+
+class EQVelocityMap:
+    """
+    """
+    def __init__(self, aphv):
+        """
+        """
+        self.period = aphv['period'][0][0][0]
+        self.lat = aphv['xnode'][0][0]  # "x" to start, "y" in transpose
+        self.lon = aphv['ynode'][0][0]  # "y" to start, "x" in transpose
+
+        self.grid = Grid(min(self.lon),np.diff(self.lon)[0],len(self.lon),\
+                         min(self.lat),np.diff(self.lat)[0],len(self.lat))
+
+        self.v = aphv['GV_cor'][0].T  # start with rows/lat, cols/lon, so transpose to match ant
+        self.std = aphv['GV_cor_std'][0]
+
+    def _indices_closest_point(self,lon,lat):
+        """
+        return lon,lat indices (ix, iy) closest to a given coordinate pair
+        """
+        ix = self.grid._xindex_left_neighbour(lon)
+        iy = self.grid._yindex_bottom_neighbour(lat)
+
+        return ix, iy
+
+    def interp_velocity(self,lon,lat):
+        """
+        interpolate velocity from map, return value for given coordinate pair
+        if in a nan region, return nans
+        ** also return std
+        """
+        # find incides of closest point (left/lon, lower/lat)
+        l, b = self._indices_closest_point(lon, lat)
+        r = l + 1; t = b + 1
+
+        # get vel and std at 4 corners surrounding point
+        x = np.array([self.lon[l], self.lon[l], self.lon[r], self.lon[r]])
+        y = np.array([self.lat[b], self.lat[t], self.lat[t], self.lat[b]])
+        z = np.array([self.v[l,b], self.v[l,t], self.v[r,t], self.v[r,b]])
+        z2 = np.array([self.std[l,b], self.std[l,t], self.std[r,t], self.std[r,b]])
+
+        # check for nans, and figure out what to do about them
+        if np.any(np.isnan(z)):
+            if sum(np.isnan(z)) == 4:
+                return np.nan, np.nan
+            elif sum(np.isnan(z)) < 4:
+                good = np.isfinite(z)
+                v_out = z[np.isfinite(z)].mean()
+        else:
+            vint = interp2d(x, y, z, kind='linear')
+            v_out = vint(lon, lat)[0]
+
+        if np.any(np.isnan(z2)):
+            if sum(np.isnan(z2)) == 4:
+                return np.nan, np.nan
+            elif sum(np.isnan(z2)) < 4:
+                good = np.isfinite(z2)
+                s_out = z2[np.isfinite(z2)].mean()
+        else:
+            sint = interp2d(x, y, z2, kind='linear')
+            s_out = vint(lon, lat)[0]
+
+        return v_out, s_out
+
 
 ########################################################################
 # grid class for velocity map setup
