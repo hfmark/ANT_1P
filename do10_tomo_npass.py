@@ -1,5 +1,5 @@
 import numpy as np
-import pytomo.anttomo as ant
+import mods.PAT.anttomo as ant
 import pickle
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
@@ -16,15 +16,17 @@ f = open(pickle_file, 'rb')
 curves = pickle.load(f)
 f.close()
 
+plt.ioff()
+
 # set tomography parameters to loop over for n passes
-_periods = [8.0, 14.0, 20.0, 26.0, 32.0]
+_periods = [8.0, 14.0, 20.0, 25.0, 32.0]
 _npass = 3
 _vtype = 'phase'
 _grid_steps = 0.25*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
-_corr_lengths = 50*np.ones(_npass) # 50 seems better than 100
-_alphas = (600,400,250)
-_betas = 50*np.ones(_npass)
+_corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
+_alphas = (600,400,200)
+_betas = 25*np.ones(_npass)
 _lambdas = 0.3*np.ones(_npass)
 _fancy_names = ('1st','2nd','3rd','4th')
 minresheight = 0.02

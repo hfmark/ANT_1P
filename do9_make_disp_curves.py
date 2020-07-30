@@ -1,5 +1,5 @@
 import numpy as np
-import pytomo.anttomo as ant
+import mods.PAT.anttomo as ant
 from obspy import read_inventory
 from glob import glob
 import pickle

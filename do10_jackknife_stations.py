@@ -1,5 +1,5 @@
 import numpy as np
-import pytomo.anttomo as ant
+import mods.PAT.anttomo as ant
 import pickle
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
