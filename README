@@ -1,29 +1,69 @@
 Patagonia ambient noise tomography
 
-mseed2seed.sh
-	convert miniseed files from IRIS into full seed for seed2cor
+########################################################################
 
-generate_seedlist.py
-	make a list of full seed files for input to seed2cor
+do0_get_ENAP_mseed.py
+	get ENAP files from /DB/, clean ANMA bad timing days, resample to 1Hz, and write day files
 
-generate_station_list.py
-	make a list of all stations that have at least one full seed file for input to seed2cor
+do0_make_alt_response_file.py
+	read stationxml files for each network, pull stations that are used here, write a single 
+	xml file and a single dataless file with all station info combined
 
-do_cor.sh
-	run seed2cor on seedfiles.lst and stations.lst
+do1_cat_and_convert_mseed.py
+	list dates that we have data for, all networks, and cat into single-day, all-station
+	miniseed files (pulling from ENAP and IRIS downloads). Call rdseed with combined
+	dataless file to make seed for seed2cor.
 
-#################################################################
-seismic-noise-tomography/
-	all the scripts and output files for ANT; scripts, at least, are version controlled
+do2_generate_seedlist.py
+	make a list of seedfiles to run through seed2cor
+
+do2_generate_station_list.py
+	make a list of stations and their coordinates for seed2cor. *note* lat/lon order changed
+	when version of seed2cor changed.
+
+do3_cor.sh
+	RUN seed2cor with hardcorded number of threads
+
+do4_stack_cor.py
+	read sac files from seed2cor, stack monthly cross-correlations into one stack per
+	station pair. Do the same for overlapping month triplets for later std calc.
+
+do5_symmetrize_cor.py
+	symmetrize stacked cross correlations (for SNR calc)
+
+do6_calc_snr.sh
+	run the spectral_snr_s2c code to get SNR for full xcorr and 3-month xcorr
+
+do7_ftan_input_list.py
+	Write list input file for aftan: pulls filenames and uses snr for period bounds, 
+	the rest is basically hard-coded
+
+do8_aftan.sh
+	run aftan
+
+**do9_make_disp_curves.py [** -> run on laptop]
+	read aftan output and make/pickle DispersionCurve python objects
+
+**do10_params_tomo.py
+	test tomo parameters
+
+**do10_jackknife_stations.py
+	run tomography with one station excluded in each pass
+
+**do10_tomo_npass.py
+	actually run tomography with 3-pass, with one set of parameters, and pickle vmaps
+
+ak135_phvel.dat
+	disp curve reference for aftan (hard-coded name/path)
 
 #################################################################
 seed/
 	miniseed files with all the input data
 		1P/ and YJ/ are all the IRIS stuff (unpacked but not organized)
-		1P_mn/ YJ_mn/ and ENAP_mn/ are organized by year-month; 1P also has ENAP copied in it
-		*_z is (mostly) just z components
+		ENAP/ is the resampled miniseed files pulled from /DB/
+		dayfiles/ is the catted single-day, all-station files used for seed2cor
+			(both miniseed and fullseed)
 		datalesss/ is the dataless seed headers for ALL stations, all networks
-	ALSO full seed files created for using seed2cor
 
 #################################################################
 requests/
@@ -49,20 +89,6 @@ requests/
 
 	permanent_sta.lst
 		just the permanent stations, for breq_fast request script
-
-#################################################################
-get_files_for_SNT/
-
-	mini_ENAP.py
-		Copy miniseed day files from Patrick's Antelope database; rename and resample 
-		and rewrite in year-month dirs for pysismo input
-
-	move_minifiles.py
-		move/rename miniseed files from IRIS (decrypted) into year-month dirs for 
-			pysismo input
-
-	z_files.py
-		move Z component 1-month files from each network dir into a central set of dirs
 
 #################################################################
 old/
