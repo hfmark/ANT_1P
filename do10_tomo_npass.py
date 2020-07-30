@@ -117,6 +117,7 @@ for period in _periods:
                 skippairs.append(badpairs[ib])
         else:
             # adding velocity map to the dict of final maps
+            v.map_stdev()  # calculate uncertainty for velocity map before saving
             vmaps[period] = v
             maxresidual = None
 
