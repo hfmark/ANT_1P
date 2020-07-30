@@ -966,6 +966,15 @@ class VelocityMap:
         for x, y, label in zip(xlist, ylist, labels):
             ax.text(x, y, label, ha='center', va='bottom', fontsize=10, weight='bold')
 
+    def get_2d_interpolator(self):
+        """
+        set up 2D interpolation from this, bicubic
+        """
+        v = self.grid.to_2D_array(self.v0 / (1 + self.mopt))
+        vint = interp2d(self.grid.xarray(), self.grid.yarray(), v.T, kind='cubic')
+        self.interpolator = vint
+        return
+
 ########################################################################
 # dispersion curve class, reading in info from aftan and snr files
 ########################################################################
@@ -1140,7 +1149,7 @@ class DispersionCurve:
 class EQVelocityMap:
     """
     """
-    def __init__(self, aphv):
+    def __init__(self, aphv, eik=False):
         """
         """
         self.period = aphv['period'][0][0][0]
@@ -1150,8 +1159,14 @@ class EQVelocityMap:
         self.grid = Grid(min(self.lon),np.diff(self.lon)[0],len(self.lon),\
                          min(self.lat),np.diff(self.lat)[0],len(self.lat))
 
-        self.v = aphv['GV_cor'][0].T  # start with rows/lat, cols/lon, so transpose to match ant
-        self.std = aphv['GV_cor_std'][0]
+        if eik:  # eikonal
+            self.v = aphv['GV'][0].T
+            self.std = aphv['GV_std'][0].T
+            self.tomo_type = 'eikonal'
+        else:  # helmholtz
+            self.v = aphv['GV_cor'][0].T  # start with rows/lat, cols/lon, so transpose to match ant
+            self.std = aphv['GV_cor_std'][0].T
+            self.tomo_type = 'helmholtz'
 
     def _indices_closest_point(self,lon,lat):
         """
@@ -1181,7 +1196,7 @@ class EQVelocityMap:
         # check for nans, and figure out what to do about them
         if np.any(np.isnan(z)):
             if sum(np.isnan(z)) == 4:
-                return np.nan, np.nan
+                v_out = np.nan
             elif sum(np.isnan(z)) < 4:
                 good = np.isfinite(z)
                 v_out = z[np.isfinite(z)].mean()
@@ -1191,13 +1206,13 @@ class EQVelocityMap:
 
         if np.any(np.isnan(z2)):
             if sum(np.isnan(z2)) == 4:
-                return np.nan, np.nan
+                s_out = np.nan
             elif sum(np.isnan(z2)) < 4:
                 good = np.isfinite(z2)
                 s_out = z2[np.isfinite(z2)].mean()
         else:
             sint = interp2d(x, y, z2, kind='linear')
-            s_out = vint(lon, lat)[0]
+            s_out = sint(lon, lat)[0]
 
         return v_out, s_out
 
