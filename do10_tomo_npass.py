@@ -21,7 +21,7 @@ plt.ioff()
 # set tomography parameters to loop over for n passes
 _periods = [8.0, 14.0, 20.0, 25.0, 32.0]
 _npass = 3
-_vtype = 'phase'
+_vtype = 'phase'  # 'group' 
 _grid_steps = 0.25*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
@@ -37,10 +37,13 @@ assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_len
 
 _skip_stations = []
 #_skip_pairs = [('AY01','GUMN')]
-_skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-		 ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
-		 ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
-		# 8s(x3), 14s(x4), 20s(x4), 26s(x1)
+if _vtype == 'phase':
+    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
+                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
+                    ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
+                    # 8s(x3), 14s(x4), 20s(x4), 26s(x1)
+elif _vtype == 'group':
+    _skip_pairs = []
 
 # set up output pdf file and pickle file
 opdf = 'output/%i-pass-tomography_%s.pdf' % (_npass, _vtype)
