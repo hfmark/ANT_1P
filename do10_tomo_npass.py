@@ -21,7 +21,7 @@ plt.ioff()
 # set tomography parameters to loop over for n passes
 _periods = [8.0, 14.0, 20.0, 25.0, 32.0]
 _npass = 3
-_vtype = 'phase'  # 'group' 
+_vtype = 'group' # 'phase' 
 _grid_steps = 0.25*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
@@ -120,7 +120,6 @@ for period in _periods:
                 skippairs.append(badpairs[ib])
         else:
             # adding velocity map to the dict of final maps
-            v.map_stdev()  # calculate uncertainty for velocity map before saving
             vmaps[period] = v
             maxresidual = None
 
