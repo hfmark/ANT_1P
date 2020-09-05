@@ -3,94 +3,110 @@ Patagonia ambient noise tomography
 ########################################################################
 
 do0_get_ENAP_mseed.py
-	get ENAP files from /DB/, clean ANMA bad timing days, resample to 1Hz, and write day files
+    get ENAP files from /DB/, clean ANMA bad timing days, resample to 1Hz, and write day files
 
 do0_make_alt_response_file.py
-	read stationxml files for each network, pull stations that are used here, write a single 
-	xml file and a single dataless file with all station info combined
+    read stationxml files for each network, pull stations that are used here, write a single 
+    xml file and a single dataless file with all station info combined
 
 do1_cat_and_convert_mseed.py
-	list dates that we have data for, all networks, and cat into single-day, all-station
-	miniseed files (pulling from ENAP and IRIS downloads). Call rdseed with combined
-	dataless file to make seed for seed2cor.
+    list dates that we have data for, all networks, and cat into single-day, all-station
+    miniseed files (pulling from ENAP and IRIS downloads). Call rdseed with combined
+    dataless file to make seed for seed2cor.
 
 do2_generate_seedlist.py
-	make a list of seedfiles to run through seed2cor
+    make a list of seedfiles to run through seed2cor
 
 do2_generate_station_list.py
-	make a list of stations and their coordinates for seed2cor. *note* lat/lon order changed
-	when version of seed2cor changed.
+    make a list of stations and their coordinates for seed2cor. *note* lat/lon order changed
+    when version of seed2cor changed.
 
 do3_cor.sh
-	RUN seed2cor with hardcorded number of threads
+    RUN seed2cor with hardcorded number of threads
 
 do4_stack_cor.py
-	read sac files from seed2cor, stack monthly cross-correlations into one stack per
-	station pair. Do the same for overlapping month triplets for later std calc.
+    read sac files from seed2cor, stack monthly cross-correlations into one stack per
+    station pair. Do the same for overlapping month triplets for later std calc.
 
 do5_symmetrize_cor.py
-	symmetrize stacked cross correlations (for SNR calc)
+    symmetrize stacked cross correlations (for SNR calc)
 
 do6_calc_snr.sh
-	run the spectral_snr_s2c code to get SNR for full xcorr and 3-month xcorr
+    run the spectral_snr_s2c code to get SNR for full xcorr and 3-month xcorr
 
 do7_ftan_input_list.py
-	Write list input file for aftan: pulls filenames and uses snr for period bounds, 
-	the rest is basically hard-coded
+    Write list input file for aftan: pulls filenames and uses snr for period bounds, 
+    the rest is basically hard-coded
 
 do8_aftan.sh
-	run aftan
+    run aftan
 
 **do9_make_disp_curves.py [** -> run on laptop]
-	read aftan output and make/pickle DispersionCurve python objects
+    read aftan output and make/pickle DispersionCurve python objects
 
 **do10_params_tomo.py
-	test tomo parameters
+    test tomo parameters
 
 **do10_jackknife_stations.py
-	run tomography with one station excluded in each pass
+    run tomography with one station excluded in each pass
 
 **do10_tomo_npass.py
-	actually run tomography with 3-pass, with one set of parameters, and pickle vmaps
+    actually run tomography with 3-pass, with one set of parameters, and pickle vmaps
 
 ak135_phvel.dat
-	disp curve reference for aftan (hard-coded name/path)
+    disp curve reference for aftan (hard-coded name/path)
+
+#################################################################
+plot_aftan.py
+    plot dispersion curves and amplitude maps from aftan outputs
+        [note that station coord format may be messed up for mapping; easy to fix]
+
+plot_lcurves.py
+    plot some of the L-curve stuff in a 3D scatter. Doesn't actually do much but
+        can be a reminder of relevant commands for parsing that info.
+
+station_disp_curve.py
+    read EQ and ANT maps, get dispersion curves at each station location and plot
+
+compare_ant_eq.py
+    plot EQ and ANT tomo maps side by side, on the same velocity scale, to see just how
+        far off they are :(
 
 #################################################################
 seed/
-	miniseed files with all the input data
-		1P/ and YJ/ are all the IRIS stuff (unpacked but not organized)
-		ENAP/ is the resampled miniseed files pulled from /DB/
-		dayfiles/ is the catted single-day, all-station files used for seed2cor
-			(both miniseed and fullseed)
-		datalesss/ is the dataless seed headers for ALL stations, all networks
+    miniseed files with all the input data
+        1P/ and YJ/ are all the IRIS stuff (unpacked but not organized)
+        ENAP/ is the resampled miniseed files pulled from /DB/
+        dayfiles/ is the catted single-day, all-station files used for seed2cor
+            (both miniseed and fullseed)
+        datalesss/ is the dataless seed headers for ALL stations, all networks
 
 #################################################################
 requests/
-	Data_request_*.py
-		script to automate breq_fast requests to IRIS
-	there are two scripts because one was used for the discrete 1P and YJ periods and 
-		the other dealt with the longer-term permanent network data
+    Data_request_*.py
+        script to automate breq_fast requests to IRIS
+    there are two scripts because one was used for the discrete 1P and YJ periods and 
+        the other dealt with the longer-term permanent network data
 
-		For later: when more 1P data is available, you'll want _1_
+        For later: when more 1P data is available, you'll want _1_
 
-	decrypt_untar.sh
-		use openssl key to decrypt the embargoed 1P data
-		Note that openssl version matters in interesting ways
+    decrypt_untar.sh
+        use openssl key to decrypt the embargoed 1P data
+        Note that openssl version matters in interesting ways
 
-	just_untar.sh
-		YJ data (and permanent stations on their own) are not embargoed, hence not encrypted
+    just_untar.sh
+        YJ data (and permanent stations on their own) are not embargoed, hence not encrypted
 
-	northchile_sta.lst
-		YJ stations, for breq_fast request script
+    northchile_sta.lst
+        YJ stations, for breq_fast request script
 
-	southchile_sta.lst
-		1P and permanent stations, for breq_fast request script
+    southchile_sta.lst
+        1P and permanent stations, for breq_fast request script
 
-	permanent_sta.lst
-		just the permanent stations, for breq_fast request script
+    permanent_sta.lst
+        just the permanent stations, for breq_fast request script
 
 #################################################################
 old/
-	bits and pieces, some pysismo stuff and some other stuff that's all no longer used
+    bits and pieces, some pysismo stuff and some other stuff that's all no longer used
 
