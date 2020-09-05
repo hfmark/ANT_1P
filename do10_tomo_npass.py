@@ -20,9 +20,10 @@ plt.ioff()
 
 # set tomography parameters to loop over for n passes
 _periods = [8.0, 14.0, 20.0, 25.0, 32.0]
+#_periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
 _npass = 3
-_vtype = 'group' # 'phase' 
-_grid_steps = 0.25*np.ones(_npass)
+_vtype = 'phase'  # 'group'
+_grid_steps = 0.3*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
 _alphas = (600,400,200)
@@ -30,18 +31,25 @@ _betas = 25*np.ones(_npass)
 _lambdas = 0.3*np.ones(_npass)
 _fancy_names = ('1st','2nd','3rd','4th')
 minresheight = 0.02
+lonmin = -76.  # override automatic gridding so that things match EQ tomo
+latmin = -55.
+nlon = 26
+nlat = 42
 
 assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_lengths)==_npass,\
                len(_alphas)==_npass,len(_betas)==_npass,len(_lambdas)==_npass,\
                len(_fancy_names)>=_npass]), 'not enough parameters for %i passes' % _npass
 
+_skip_stations = ['RRS01','VOH01']
 _skip_stations = []
 #_skip_pairs = [('AY01','GUMN')]
 if _vtype == 'phase':
-    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
-                    ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
+#    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
+#                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
+#                    ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
                     # 8s(x3), 14s(x4), 20s(x4), 26s(x1)
+    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
+                    ('COYC','MG04'),('GO08','GRAF')]
 elif _vtype == 'group':
     _skip_pairs = []
 
@@ -100,7 +108,11 @@ for period in _periods:
                                     alpha=_alphas[passnb],
                                     beta=_betas[passnb],
                                     lambda_=_lambdas[passnb],
-                                    vtype=_vtype)
+                                    vtype=_vtype,
+                                    lonmin=lonmin,
+                                    latmin=latmin,
+                                    nlon=nlon,
+                                    nlat=nlat)
         except ant.CannotPerformTomoInversion as err:
             print("Cannot perform tomo inversion: {}".format(err))
             for fig in periodfigs:
@@ -172,7 +184,11 @@ for period in _periods:
                                     alpha=_alphas[-1],
                                     beta=_betas[-1],
                                     lambda_=_lambdas[-1],
-                                    vtype=_vtype)
+                                    vtype=_vtype,
+                                    lonmin=lonmin,
+                                    latmin=latmin,
+                                    nlon=nlon,
+                                    nlat=nlat)
         except CannotPerformTomoInversion as err:
             print("Cannot perform tomo inversion: {}".format(err))
             for fig in periodfigs:
