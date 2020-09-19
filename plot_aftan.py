@@ -121,7 +121,7 @@ def find_sta_network(sta,inv):
 	"""
 	return inv.select(station=sta).networks[0].code
 
-def plot_basemap(ax=None,coast_shp='shapefiles/SouthAmericaCoasts.shp',\
+def plot_basemap(ax=None,coast_shp='../Nav/shapefiles/SA_tiny.shp',\
 		   bbox=[-76,-65,-56,-42]):
 	"""
 	plot basemap with coastlines
@@ -135,7 +135,7 @@ def plot_basemap(ax=None,coast_shp='shapefiles/SouthAmericaCoasts.shp',\
 		for i1, i2 in partlims:
 			points = shape.points[i1:i2]
 			x, y = zip(*points)
-			ax.plot(x,y,'-',lw=0.75,color='k')
+			ax.plot(x,y,'-',lw=0.25,color='grey')
 
 	ax.set_aspect('equal')
 	ax.set_xlim(bbox[:2])
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 	sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
 	sta2_list = [e.split('/')[-1].split('_')[2].split('.')[0] for e in done_list]
 
-	pdfpath = 'output/FTAN_plots.pdf'
+	pdfpath = '../Plots/FTAN_plots.pdf'
 	if os.path.isfile(pdfpath):
 		iq = input('%s exists. Overwrite? y/[n]' % pdfpath) or 'n'
 		if iq == 'n': sys.exit()
