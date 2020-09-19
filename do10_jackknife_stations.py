@@ -21,18 +21,22 @@ f.close()
 stations = np.unique(np.hstack(([c.station1.name for c in curves],[c.station2.name for c in curves])))
 
 # choose tomo parameters
-period = 26.0
+period = 18.0
 vtype = 'phase'
-grid_step = 0.25
+grid_step = 0.3
 minspectsnr = 5.0
-corr_length = 50
-alpha = 250
-beta = 50
+corr_length = 32
+alpha = 200
+beta = 25
 lam = 0.3
 minresheight = 0.02
+lonmin = -76.  # override automatic gridding so that things match EQ tomo
+latmin = -55.
+nlon = 26
+nlat = 42
 
 # set up output pdf
-opdf = 'output/station-jk-%.1f_%s.pdf' % (period, vtype)
+opdf = '../Plots/ANT_station-jk-%.1f_%s.pdf' % (period, vtype)
 if os.path.exists(opdf):
     iq = input('outfile already present. Replace? [y]/n') or 'y'
     if iq == 'n' or iq == 'N':
@@ -60,7 +64,11 @@ for sta in stations:
                                     alpha=alpha,
                                     beta=beta,
                                     lambda_=lam,
-                                    vtype=vtype)
+                                    vtype=vtype,
+                                    lonmin=lonmin,
+                                    latmin=latmin,
+                                    nlon=nlon,
+                                    nlat=nlat)
 
     title = ("SKIPPING {0}: {1} s, {2} x {2} deg, min SNR = {3}, corr. length "
              "= {4} km, alpha = {5}, beta = {6}, lambda = {7} ({8} paths)")

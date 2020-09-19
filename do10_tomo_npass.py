@@ -19,10 +19,11 @@ f.close()
 plt.ioff()
 
 # set tomography parameters to loop over for n passes
-_periods = [8.0, 14.0, 20.0, 25.0, 32.0]
+#_periods = [8.0, 14.0, 20.0, 25.0, 32.0]
 #_periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
+_periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30.]
 _npass = 3
-_vtype = 'phase'  # 'group'
+_vtype = 'group'  # 'phase'
 _grid_steps = 0.3*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
@@ -40,8 +41,7 @@ assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_len
                len(_alphas)==_npass,len(_betas)==_npass,len(_lambdas)==_npass,\
                len(_fancy_names)>=_npass]), 'not enough parameters for %i passes' % _npass
 
-_skip_stations = ['RRS01','VOH01']
-_skip_stations = []
+_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'
 #_skip_pairs = [('AY01','GUMN')]
 if _vtype == 'phase':
 #    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
@@ -54,7 +54,7 @@ elif _vtype == 'group':
     _skip_pairs = []
 
 # set up output pdf file and pickle file
-opdf = 'output/%i-pass-tomography_%s.pdf' % (_npass, _vtype)
+opdf = '../Plots/%i-pass-tomography_%s.pdf' % (_npass, _vtype)
 opickle = 'output/%i-pass-tomography_%s.pickle' % (_npass, _vtype)
 if os.path.exists(opdf) or os.path.exists(opickle):
     iq = input('outfile(s) already present. replace? [y]/n') or 'y'

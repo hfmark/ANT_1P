@@ -35,7 +35,7 @@ _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),(
 		 ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
 
 # set up output pdf file and pickle file
-opdf = 'output/test-tomography_%s.pdf' % (_vtype)
+opdf = '../Plots/test-tomography_%s.pdf' % (_vtype)
 oLcurve = 'output/Lcurve_data_%s.dat' % (_vtype)
 if os.path.exists(opdf) or os.path.exists(oLcurve):
     iq = input('outfile(s) already present. replace? [y]/n') or 'y'
