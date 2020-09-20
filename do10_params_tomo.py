@@ -18,21 +18,23 @@ curves = pickle.load(f)
 f.close()
 
 # set tomography parameters to loop over for n passes
-_periods = [8.0, 20.0, 25.0, 32.0]
+_periods = [8.0, 16.0, 20.0, 25.0, 32.0]
 _vtype = 'phase'
-_grid_steps = [0.25, 0.5]
+_grid_steps = [0.3]
 _minspectsnrs = [5.0]
-_corr_lengths = [25,50,100,200]
-_alphas = [100,200,400,800]
-_betas = [20,50,100]
+_corr_lengths = [50,100]
+_alphas = [250,300]
+_betas = [25]
 _lambdas = [0.3]
 minresheight = 0.02
 
-_skip_stations = []
+_skip_stations = ['CHN01','VOH01']
 #_skip_pairs = [] #[('AY01','GUMN')]
+#_skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
+#		 ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
+#		 ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
 _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-		 ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
-		 ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
+                ('COYC','MG04'),('GO08','GRAF')]
 
 # set up output pdf file and pickle file
 opdf = '../Plots/test-tomography_%s.pdf' % (_vtype)
