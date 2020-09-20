@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io as sio
 import matplotlib.pyplot as plt
 import mods.PAT.anttomo as ant
-from obspy import read_inventory
+import mods.PAT.files as vr
 from matplotlib.backends.backend_pdf import PdfPages
 import pickle
 import os, sys
@@ -28,11 +28,9 @@ f.close()
 opdf = '../Plots/disp_curve_stations.pdf'
 pdf = PdfPages(opdf)
 
-# read inventory, get station info (coords/names for all stations)
-inv = read_inventory('seed/dataless/combined.xml')
-stnm = np.array([e.split(' ')[0].split('.')[-1] for e in inv.get_contents()['stations']])
-slat = np.array([inv.select(station=e).networks[0].stations[0].latitude for e in stnm])
-slon = np.array([inv.select(station=e).networks[0].stations[0].longitude for e in stnm])
+# get station info (coords/names for all stations)
+stnm = np.loadtxt(vr.sta_list, uscols=(0,), dtype=str)
+slon,slat = np.loadtat(vr.sta_list, usecols=(1,2), unpack=True)
 
 # periods for both
 eper = [emaps[k].period for k in emaps.keys()]
