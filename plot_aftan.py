@@ -257,14 +257,14 @@ if __name__ == '__main__':
 		ax3.set_ylim(vmin,vmax)
 
 		#### station map
-		gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
-		ax4 = fig.add_subplot(gs4[0,0])
-		plot_basemap(ax4)
-		ll1 = get_sta_coords(sta1,inv); ll2 = get_sta_coords(sta2,inv); nm = (sta1,sta2)
-		x = (ll1[1],ll2[1]); y = (ll1[0],ll2[0])
-		ax4.plot(x,y,'^-',color='k',ms=10,mfc='w',mew=1,zorder=100)
-		for lon,lat,label in zip(x, y, nm):
-			ax4.text(lon, lat, label, ha='center', va='bottom', fontsize=7, weight='bold')
+		#gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
+		#ax4 = fig.add_subplot(gs4[0,0])
+		#plot_basemap(ax4)
+		#ll1 = get_sta_coords(sta1,inv); ll2 = get_sta_coords(sta2,inv); nm = (sta1,sta2)
+		#x = (ll1[1],ll2[1]); y = (ll1[0],ll2[0])
+		#ax4.plot(x,y,'^-',color='k',ms=10,mfc='w',mew=1,zorder=100)
+		#for lon,lat,label in zip(x, y, nm):
+		#	ax4.text(lon, lat, label, ha='center', va='bottom', fontsize=7, weight='bold')
 
 		#### nominal vs observed periods
 		gs5 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
@@ -279,7 +279,7 @@ if __name__ == '__main__':
 		# make things not overlap
 		gs2.update(left=0.1,right=0.4)
 		gs3.update(left=0.45,right=0.75)
-		gs4.update(left=0.84,right=0.98,bottom=0.50)
+		#gs4.update(left=0.84,right=0.98,bottom=0.50)
 		gs5.update(left=0.84,right=0.98,top=0.44)
 
 		# plot title
