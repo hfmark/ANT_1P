@@ -71,9 +71,20 @@ for i in P_inst:
 
 # add the stations that maybe changed names?
 for i in bad_sta:
-    os.system('java -jar ../other_code/stationxml-seed-converter-2.0.10-SNAPSHOT.jar --input seed/dataless/IRISDMC-%s.1P.dataless --output seed/dataless/%s.1P.xml' % (i,i))
-    temp_inv = read_inventory('seed/dataless/%s.1P.xml' % i)
-    P_net.stations.append(temp_inv.networks[0].stations[0])
+    if i == 'BRMY':  # rename the renamed stations
+        sta2 = 'BRNY'
+        sta = P_read.networks[0].select(station=sta2).stations[0]
+        sta.code = 'BRMY'
+        P_net.stations.append(sta)
+    elif i == 'PTTY':
+        sta2 = 'CH14'
+        sta = P_read.networks[0].select(station=sta2).stations[0]
+        sta.code = 'PTTY'
+        P_net.stations.append(sta)
+    else:
+        os.system('java -jar ../other_code/stationxml-seed-converter-2.0.10-SNAPSHOT.jar --input seed/dataless/IRISDMC-%s.1P.dataless --output seed/dataless/%s.1P.xml' % (i,i))
+        temp_inv = read_inventory('seed/dataless/%s.1P.xml' % i)
+        P_net.stations.append(temp_inv.networks[0].stations[0])
 
 inv_all.networks.append(P_net)
 
