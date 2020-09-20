@@ -29,8 +29,8 @@ opdf = '../Plots/disp_curve_stations.pdf'
 pdf = PdfPages(opdf)
 
 # get station info (coords/names for all stations)
-stnm = np.loadtxt(vr.sta_list, uscols=(0,), dtype=str)
-slon,slat = np.loadtat(vr.sta_list, usecols=(1,2), unpack=True)
+stnm = np.loadtxt(vr.sta_list, usecols=(0,), dtype=str)
+slon,slat = np.loadtxt(vr.sta_list, usecols=(1,2), unpack=True)
 
 # periods for both
 eper = [emaps[k].period for k in emaps.keys()]
