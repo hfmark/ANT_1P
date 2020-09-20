@@ -19,11 +19,16 @@ f.close()
 plt.ioff()
 
 # set tomography parameters to loop over for n passes
+_vtype = 'phase'  # 'group'
+
+if _vtype == 'phase':
+    _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
+elif _vtype == 'group':
+    _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30.]
+
 #_periods = [8.0, 14.0, 20.0, 25.0, 32.0]
-#_periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
-_periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30.]
+
 _npass = 3
-_vtype = 'group'  # 'phase'
 _grid_steps = 0.3*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 32*np.ones(_npass) # 50 seems better than 100
