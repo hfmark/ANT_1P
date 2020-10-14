@@ -24,25 +24,25 @@ days_all = np.array([datetime.strptime(a[-8:],'%Y.%j').strftime('%Y.%m.%d') for 
 days = np.unique(days_all)
 
 for dy in days:
-	file_list = dayfiles[np.where(days_all == dy)]  # files for this day, all stations
+    file_list = dayfiles[np.where(days_all == dy)]  # files for this day, all stations
 
-	st = Stream()
-	for fl in file_list:
-		if fl not in bad_files and os.stat(fl).st_size != 0:
-			st += read(fl)
-	if len(st) > 0:
-		# decimate or resample to 1Hz
-		if np.all([tr.stats.sampling_rate == 100 for tr in st]):
-			st.decimate(100, no_filter=True)
-		else:
-			st.resample(1.0, no_filter=True)
+    st = Stream()
+    for fl in file_list:
+        if fl not in bad_files and os.stat(fl).st_size != 0:
+            st += read(fl)
+    if len(st) > 0:
+        # decimate or resample to 1Hz
+        if np.all([tr.stats.sampling_rate == 100 for tr in st]):
+            st.decimate(100, no_filter=True)
+        else:
+            st.resample(1.0, no_filter=True)
 
-		st.merge(method=1,fill_value=0)  # make sure 1 trace per sta/comp
+        st.merge(method=1,fill_value=0)  # make sure 1 trace per sta/comp
 
-		for tr in st:  # rename channels to L* to match [edited] dataless
-			tr.stats.channel = 'L' + tr.stats.channel[1:]
+        for tr in st:  # rename channels to L* to match [edited] dataless
+            tr.stats.channel = 'L' + tr.stats.channel[1:]
 
-		# write miniseed
-		ofile = os.path.join(mseed_dir_out,'EN-%s.%s.%s.mseed' % \
-				(dy.split('.')[0],dy.split('.')[1],dy.split('.')[2]))
-		st.write(ofile, format='MSEED')
+        # write miniseed
+        ofile = os.path.join(mseed_dir_out,'EN-%s.%s.%s.mseed' % \
+                (dy.split('.')[0],dy.split('.')[1],dy.split('.')[2]))
+        st.write(ofile, format='MSEED')
