@@ -3,29 +3,22 @@ from datetime import datetime, timedelta
 import os, sys
 
 
-# 1P (including permanent stations during same time period)
-# or YJ
+# XB and YN (SEPA stations)
 
-stalst = '/P/hmark/ANT_1P/southchile_sta.lst'  # network  station
-#stalst = '/P/hmark/ANT_1P/northchile_sta.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/verysouth_sta.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'
 request_email = 'hmark@wustl.edu'
 
-#day1 = datetime(2018,11,4)
-#dayN = datetime(2019,3,11)
-day1 = datetime(2019,3,11)
-dayN = datetime(2019,11,1)  # whoops missed half the 1P data
-#day1 = datetime(2004,12,5)
-#dayN = datetime(2006,5,28)
+day1 = datetime(1997,1,06)
+dayN = datetime(2001,12,31)
 
 dayR = day1
 while dayR < dayN:
 	BT = dayR
 
-	label = '1P_LH_%s' % (dayR.strftime('%Y.%b.%d'))
-	#label = 'YJ_LH_%s' % (dayR.strftime('%Y.%b.%d'))
+	label = 'SP_LH_%s' % (dayR.strftime('%Y.%b.%d'))
 
 	dayR = dayR + timedelta(days=1)
 	ET = dayR

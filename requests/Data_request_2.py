@@ -2,6 +2,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import os, sys
 
+# permanent stations, prior to 1P
+
 stalst = '/P/hmark/ANT_1P/permanent_sta.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
