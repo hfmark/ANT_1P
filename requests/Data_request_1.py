@@ -13,11 +13,11 @@ net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 request_name = 'Hannah Mark'
 request_email = 'hmark@wustl.edu'
 
-#day1 = datetime(2018,11,4)
+#day1 = datetime(2018,11,4)  # first part of 1P
 #dayN = datetime(2019,3,11)
-day1 = datetime(2019,3,11)
-dayN = datetime(2019,11,1)  # whoops missed half the 1P data
-#day1 = datetime(2004,12,5)
+day1 = datetime(2019,3,11)  # second part of 1P
+dayN = datetime(2019,11,1)  # because I missed half the first time whoops
+#day1 = datetime(2004,12,5) # YJ, or at least part of it (2006/12/31?)
 #dayN = datetime(2006,5,28)
 
 dayR = day1
