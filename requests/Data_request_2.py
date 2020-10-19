@@ -4,21 +4,17 @@ import os, sys
 
 # permanent stations, prior to 1P
 
-stalst = '/P/hmark/ANT_1P/requests/permanent_sta.lst'  # network  station
+#stalst = '/P/hmark/ANT_1P/requests/permanent_sta.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/requests/extra_permanent.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'
 request_email = 'hmark@wustl.edu'
 
-#day1 = datetime(2018,11,4)
-#dayN = datetime(2019,3,11)
-#day1 = datetime(2019,3,11)
-#dayN = datetime(2019,11,1)  # whoops missed half the 1P data
-#day1 = datetime(2004,12,5)
-#dayN = datetime(2006,5,28)
-
-day1 = datetime(2010,7,16)  # all dates for at least 2 permanent stations up to start of 1P
-dayN = datetime(2018,11,4)
+#day1 = datetime(2010,7,16)  # all dates for at least 2 permanent stations up to start of 1P
+#dayN = datetime(2018,11,4)
+day1 = datetime(2010,7,16)  # all dates for at least 2 permanent stations INCLUDING 1P
+dayN = datetime(2019,11,1) 
 
 dayR = day1
 while dayR < dayN:
