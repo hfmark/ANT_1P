@@ -5,7 +5,7 @@ import os, sys
 
 # XB and YN (SEPA stations)
 
-stalst = '/P/hmark/ANT_1P/verysouth_sta.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/requests/verysouth_sta.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'

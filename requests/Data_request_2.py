@@ -4,7 +4,7 @@ import os, sys
 
 # permanent stations, prior to 1P
 
-stalst = '/P/hmark/ANT_1P/permanent_sta.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/requests/permanent_sta.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'

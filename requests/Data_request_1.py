@@ -6,8 +6,8 @@ import os, sys
 # 1P (including permanent stations during same time period)
 # or YJ
 
-stalst = '/P/hmark/ANT_1P/southchile_sta.lst'  # network  station
-#stalst = '/P/hmark/ANT_1P/northchile_sta.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/requests/southchile_sta.lst'  # network  station
+#stalst = '/P/hmark/ANT_1P/requests/northchile_sta.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'
