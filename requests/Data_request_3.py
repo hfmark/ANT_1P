@@ -11,7 +11,7 @@ net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 request_name = 'Hannah Mark'
 request_email = 'hmark@wustl.edu'
 
-day1 = datetime(1997,1,06)
+day1 = datetime(1997,1,6)
 dayN = datetime(2001,12,31)
 
 dayR = day1
