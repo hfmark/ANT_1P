@@ -19,7 +19,7 @@ request_email = 'hmark@wustl.edu'
 #dayN = datetime(2019,11,1)  # because I missed half the first time whoops
 #day1 = datetime(2004,12,5) # YJ, or at least part of it (2006/12/31?)
 #dayN = datetime(2006,5,28)
-day1 = datetime(2006,05,29) # trying to get second part of YJ
+day1 = datetime(2006,5,29) # trying to get second part of YJ
 dayN = datetime(2006,12,31)
 
 dayR = day1
