@@ -1,8 +1,9 @@
 import numpy as np
 from obspy import read_inventory, UTCDateTime
 from obspy.core.inventory import Inventory, Network, Station, Channel, Site
-from obspy.core.inventory.util import Azimuth
+from obspy.core.inventory.util import Azimuth, SampleRate
 from glob import glob
+from copy import deepcopy
 import os, sys
 
 ####
@@ -53,6 +54,23 @@ for i in G_inst:
 inv_all.networks.append(G_net)
 
 del G_read  # cleanup
+
+# read AI, find the one station, add it
+AI_read = read_inventory('seed/dataless/AI.dataless')
+
+AI_net = AI_read.networks[0].select(station='X').copy()  # just the network
+sta = AI_read.networks[0].select(station='DSPA').stations[0]
+ch_list = deepcopy(sta.channels[-3:])  # we happen to know these are MH*
+for ch in ch_list:
+    ch.code = 'L' + ch.code[1:]
+    ch.sample_rate = SampleRate(1.)  # for resampled LH* data, when it gets rewritten
+    ch.location_code = '00'  # for simplicity
+    sta.channels.append(ch)
+
+AI_net.stations.append(sta)
+inv_all.networks.append(AI_net)
+
+del AI_read  # cleanup
 
 # read XB, find insts, add just those
 XB_read = read_inventory('seed/dataless/XB.1997-1999.dataless')
