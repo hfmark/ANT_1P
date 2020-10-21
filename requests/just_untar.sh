@@ -4,7 +4,8 @@
 ## untar, and get rid of archives
 
 #seeddir=../seed/YJ
-seeddir=../seed/SP
+#seeddir=../seed/SP
+seeddir=../seed/new
 
 cd $seeddir
 
