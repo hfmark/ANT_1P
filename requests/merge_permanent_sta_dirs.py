@@ -24,5 +24,5 @@ for i,ndir in enumerate(new_dirs):
     flist = glob(ndir+'/*.mseed')
     print(flist, oind)
     for f in flist:
-        print(f,old_dirs[oind])
+        print(f,old_dirs[oind][0]+'/')
         #shutil.move(f,old_dirs[oind]+'/')
