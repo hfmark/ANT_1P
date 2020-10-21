@@ -3,8 +3,8 @@
 
 ## untar, and get rid of archives
 
-#seeddir=./seed/YJ
-seeddir=./seed/temp
+seeddir=./seed/YJ
+#seeddir=./seed/temp
 
 cd $seeddir
 
