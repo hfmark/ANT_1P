@@ -5,7 +5,8 @@ import os, sys
 # permanent stations, prior to 1P
 
 #stalst = '/P/hmark/ANT_1P/requests/permanent_sta.lst'  # network  station
-stalst = '/P/hmark/ANT_1P/requests/extra_permanent.lst'  # network  station
+#stalst = '/P/hmark/ANT_1P/requests/extra_permanent.lst'  # network  station
+stalst = '/P/hmark/ANT_1P/requests/AI_special.lst'  # network  station
 net,sta = np.loadtxt(stalst,dtype=(str,str),unpack=True)
 
 request_name = 'Hannah Mark'
@@ -20,7 +21,8 @@ dayR = day1
 while dayR < dayN:
 	BT = dayR
 
-	label = '1P_LH_%s' % (dayR.strftime('%Y.%b.%d'))
+	#label = '1P_LH_%s' % (dayR.strftime('%Y.%b.%d'))
+	label = '1P_MH_%s' % (dayR.strftime('%Y.%b.%d'))
 
 	dayR = dayR + timedelta(days=1)
 	ET = dayR
@@ -47,7 +49,8 @@ while dayR < dayN:
 				BT.day, BT.hour, BT.minute, BT.second))
 			mailinfo.write('%s %s %s %s %s %s ' % (ET.year, ET.month, ET.day, \
 								    ET.hour, ET.minute, ET.second))
-			mailinfo.write('1 LH?\n')
+			#mailinfo.write('1 LH?\n')
+			mailinfo.write('1 MH?\n')
 	mailinfo.close()
 	print('Start sending mail')
 	os.system("cat %s | mail -s 'Requesting Data' breq_fast@iris.washington.edu" % mainname)
