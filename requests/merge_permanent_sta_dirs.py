@@ -8,7 +8,7 @@ import os, sys
 ####
 
 # list new dirs and get day bits of names
-new_dirs = np.array(glob('../seed/new/*/'))
+new_dirs = np.array(glob('../seed/new/*'))
 new_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in new_dirs])
 print(new_days)
 
