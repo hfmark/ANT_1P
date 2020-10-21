@@ -19,7 +19,7 @@ old_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in old_dir
 for i,ndir in enumerate(new_dirs):
     # find old dir with same day as new one
     nday = new_days[i]
-    oind = np.where(old_days == nday)[0][0]
+    oind = np.where(old_days == nday)[0]
     # move any miniseed files there
     flist = glob(ndir+'*.mseed')
     for f in flist:
