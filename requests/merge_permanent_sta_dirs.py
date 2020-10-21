@@ -10,10 +10,13 @@ import os, sys
 # list new dirs and get day bits of names
 new_dirs = np.array(glob('../seed/new/*'))
 new_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in new_dirs])
-print(new_days)
 
 # list old dirs and get day bits of names
+old_dirs = np.array(glob('../seed/1P/*'))
+old_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in old_dirs])
 
 # loop new dirs/MG01.mseed files
+for i,ndir in enumerate(new_dirs):
+    print(i,ndir)
 # for each file, find old dir with same day as new one
 # move the file there
