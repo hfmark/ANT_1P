@@ -26,6 +26,6 @@ for i,ndir in enumerate(new_dirs):
         #print(flist, oind)
         for f in flist:
             #print(f,old_dirs[oind][0]+'/')
-            shutil.move(f,old_dirs[oind]+'/')
+            shutil.move(f,old_dirs[oind][0]+'/')
     else:
         print('no dir for', nday)
