@@ -1,6 +1,6 @@
 import numpy as np
 from glob import glob
-import os, sys
+import os, sys, shutil
 
 ####
 # move miniseed files for permanent stations downloaded separately into established 1P dirs for
@@ -17,6 +17,11 @@ old_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in old_dir
 
 # loop new dirs/MG01.mseed files
 for i,ndir in enumerate(new_dirs):
-    print(i,ndir)
-# for each file, find old dir with same day as new one
-# move the file there
+    # find old dir with same day as new one
+    nday = new_days[i]
+    oind = np.where(old_days == nday)[0][0]
+    # move any miniseed files there
+    flist = glob(ndir+'*.mseed')
+    for f in flist:
+        print(f,old_dirs[oind]+'/')
+        #shutil.move(f,old_dirs[oind]+'/')
