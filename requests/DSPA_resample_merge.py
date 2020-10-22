@@ -31,6 +31,7 @@ for i,ndir in enumerate(new_dirs):
             st.resample(1.)
             for tr in st:
                 tr.stats.channel = 'L' + tr.stats.channel[1:]
+                tr.stats.location = '00'
             ofile = os.path.join(old_dirs[oind][0],fMH.split('/')[-1])
             st.write(ofile,encoding=5)
         except:
