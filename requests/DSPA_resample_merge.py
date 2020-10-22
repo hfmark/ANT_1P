@@ -30,7 +30,8 @@ for i,ndir in enumerate(new_dirs):
             print('read')
         except:
             pass
-        print(oind, old_dirs[oind])
+        print(oind, old_dirs[oind][0])
+        print(os.path.join(old_dirs[oind][0],fMH.split('/')[-1]))
 
 #        try:
 #            # read in the file, resample to 1Hz, change channel to LHZ and rewrite in 1P dir
