@@ -10,11 +10,11 @@ import os, sys, shutil
 
 # list new dirs and get day bits of names
 new_dirs = np.array(glob('../seed/new/*'))
-new_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in new_dirs])
+new_days = np.array(['.'.join(e.split('/')[-1].split('_')[-1].split('.')[:-1]) for e in new_dirs])
 
 # list old dirs and get day bits of names
 old_dirs = np.array(glob('../seed/1P/*'))
-old_days = np.array(['.'.join(e.split('/')[-1].split('.')[:-1]) for e in old_dirs])
+old_days = np.array(['.'.join(e.split('/')[-1].split('_')[-1].split('.')[:-1]) for e in old_dirs])
 
 # loop new dirs/DSPA miniseed files
 for i,ndir in enumerate(new_dirs):
