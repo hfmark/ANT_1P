@@ -28,6 +28,8 @@ for i,ndir in enumerate(new_dirs):
         try:
             st = read(fMH)
             print('read')
+        except:
+            pass
         print(oind, old_dirs[oind])
 
 #        try:
