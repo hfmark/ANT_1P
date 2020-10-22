@@ -24,26 +24,17 @@ for i,ndir in enumerate(new_dirs):
         oind = np.where(old_days == nday)[0]
         # list the filename
         fMH = glob(ndir+'/*.mseed')[0]  # For DSPA, this is always just one file long
-        print(fMH)
         try:
+            # read in the file, resample to 1Hz, change channel to LHZ and rewrite in 1P dir
             st = read(fMH)
-            print('read')
+            st.merge(method=1,fill_value=0)
+            st.resample(1.)
+            for tr in st:
+                tr.stats.channel = 'L' + tr.stats.channel[1:]
+            ofile = os.path.join(old_dirs[oind][0],fMH.split('/')[-1])
+            st.write(ofile,encoding=5)
         except:
-            pass
-        print(oind, old_dirs[oind][0])
-        print(os.path.join(old_dirs[oind][0],fMH.split('/')[-1]))
-
-#        try:
-#            # read in the file, resample to 1Hz, change channel to LHZ and rewrite in 1P dir
-#            st = read(fMH)
-#            st.merge(method=1,fill_value=0)
-#            st.resample(1.)
-#            for tr in st:
-#                tr.stats.channel = 'L' + tr.stats.channel[1:]
-#            ofile = os.path.join(old_dirs[oind],fMH.split('/')[-1])
-#            st.write(ofile,encoding=5)
-#        except:
-#            print('error?')
-#            continue
-#    else:
-#        print('no dir for', nday)
+            print('error?')
+            continue
+    else:
+        print('no dir for', nday)
