@@ -12,7 +12,7 @@ import os, sys
 #    rename dayfile by date
 ####
 
-# get a list of ALL dates with data (check 1P, YJ, EN)
+# get a list of ALL dates with data (check 1P, YJ, SP, EN)
 P_dirs = np.array(glob('seed/1P/*/'))
 P_days = np.array([datetime.strptime('.'.join(a.split('_')[-1].split('.')[:3]),'%Y.%b.%d') \
                 for a in P_dirs])
@@ -21,11 +21,15 @@ Y_dirs = np.array(glob('seed/YJ/*/'))
 Y_days = np.array([datetime.strptime('.'.join(a.split('_')[-1].split('.')[:3]),'%Y.%b.%d')\
                 for a in Y_dirs])
 
+S_dirs = np.array(glob('seed/SP/*/'))
+S_days = np.array([datetime.strptime('.'.join(a.split('_')[-1].split('.')[:3]),'%Y.%b.%d')\
+                for a in Y_dirs])
+
 E_file = np.array(glob('seed/ENAP/*.mseed'))
 E_days = np.array([datetime.strptime('.'.join(a.split('-')[-1].split('.')[:3]),'%Y.%m.%d') \
                 for a in E_file])
 
-days = np.unique(np.hstack((P_days,Y_days,E_days)))
+days = np.unique(np.hstack((P_days,Y_days,S_days,E_days)))
 dataless_file = 'seed/dataless/combined.dataless'
 
 trouble = []
@@ -69,6 +73,11 @@ for i in range(len(days)):
                     pass  # do not pass go, do not append filename
             else:
                 mseed_list.append(ffile)
+    if d in S_days:
+        fdir = S_dirs[S_days == d][0]
+        flist = glob(fdir+'*.mseed')
+        for ffile in flist:
+            mseed_list.append(ffile)
     if d in E_days:
         ffile = E_file[E_days==d][0]
         mseed_list.append(ffile)
