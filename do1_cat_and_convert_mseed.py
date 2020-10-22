@@ -23,7 +23,7 @@ Y_days = np.array([datetime.strptime('.'.join(a.split('_')[-1].split('.')[:3]),'
 
 S_dirs = np.array(glob('seed/SP/*/'))
 S_days = np.array([datetime.strptime('.'.join(a.split('_')[-1].split('.')[:3]),'%Y.%b.%d')\
-                for a in Y_dirs])
+                for a in S_dirs])
 
 E_file = np.array(glob('seed/ENAP/*.mseed'))
 E_days = np.array([datetime.strptime('.'.join(a.split('-')[-1].split('.')[:3]),'%Y.%m.%d') \
