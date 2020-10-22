@@ -32,7 +32,7 @@ for i,ndir in enumerate(new_dirs):
             st.resample(1.)
             for tr in st:
                 tr.stats.channel = 'L' + tr.stats.channel[1:]
-            ofile = os.path.join(old_days[oind],fMH.split('/')[-1])
+            ofile = os.path.join(old_dirs[oind],fMH.split('/')[-1])
             st.write(ofile,encoding=5)
         except:
             print('error?')
