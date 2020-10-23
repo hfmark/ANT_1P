@@ -16,7 +16,7 @@ import os, sys
 #    np.array(list(zip(a,a[1:],a[2:])))
 ####
 
-corfiles = np.array(glob('20??.???/COR/*/*SAC'))  # all monthly crosscorr files
+corfiles = np.array(glob('????.???/COR/*/*SAC'))  # all monthly crosscorr files (inc 199? and 20??)
 pairs = np.array(['_'.join(e.split('/')[-1].split('.')[0].split('_')[1:]) for e in corfiles])
 u_pairs = np.unique(pairs)
 
