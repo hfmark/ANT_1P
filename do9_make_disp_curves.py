@@ -12,7 +12,7 @@ import os, sys
 curves = []
 
 # find all station pairs with stacks
-corfiles = np.array(glob('COR/*_full.SAC'))  # full crosscorr only
+corfiles = np.array(glob('COR/*_full.SAC_2_DISP.1'))  # full crosscorr only
 pairs = np.array(['_'.join(e.split('/')[-1].split('_')[1:3]) for e in corfiles])
 inv = read_inventory('seed/dataless/combined.xml')
 
