@@ -85,18 +85,18 @@ inv_all.networks.append(XB_net)
 
 del XB_read  # cleanup
 
-# read YN, find insts, add just those
-YN_read = read_inventory('seed/dataless/YN.1999-2004.dataless')
-YN_file = glob('seed/dataless/IRISDMC*.YN.dataless')
-YN_inst = [e.split('/')[-1].split('-')[-1].split('.')[0] for e in YN_file]
+# read YN, find insts, add just those  # NONE OF THESE ARE USABLE so skip the network
+#YN_read = read_inventory('seed/dataless/YN.1999-2004.dataless')
+#YN_file = glob('seed/dataless/IRISDMC*.YN.dataless')
+#YN_inst = [e.split('/')[-1].split('-')[-1].split('.')[0] for e in YN_file]
 
-YN_net = YN_read.networks[0].select(station='X').copy()  # just the network
-for i in YN_inst:
-    sta = YN_read.networks[0].select(station=i).stations[0]
-    YN_net.stations.append(sta)
-inv_all.networks.append(YN_net)
+#YN_net = YN_read.networks[0].select(station='X').copy()  # just the network
+#for i in YN_inst:
+#    sta = YN_read.networks[0].select(station=i).stations[0]
+#    YN_net.stations.append(sta)
+#inv_all.networks.append(YN_net)
 
-del YN_read  # cleanup
+#del YN_read  # cleanup
 
 # read 1P, find insts, add just those
 P_read = read_inventory('seed/dataless/1P.xml')
