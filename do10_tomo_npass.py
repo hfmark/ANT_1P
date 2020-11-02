@@ -19,7 +19,8 @@ f.close()
 plt.ioff()
 
 # set tomography parameters to loop over for n passes
-_vtype = 'group'  # 'phase'
+#_vtype = 'group'
+_vtype = 'phase'
 
 if _vtype == 'phase':
     _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
@@ -28,26 +29,28 @@ elif _vtype == 'group':
 
 #_periods = [8.0, 14.0, 20.0, 25.0, 32.0]  # tests only
 
-_npass = 3
+_npass = 4
 _grid_steps = 0.3*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 50*np.ones(_npass) # 50 seems better than 100
-_alphas = (600,400,300)
+_alphas = (600,400,300,200)
 _betas = 25*np.ones(_npass)
 _lambdas = 0.3*np.ones(_npass)
 _fancy_names = ('1st','2nd','3rd','4th')
 minresheight = 0.02
 lonmin = -76.  # override automatic gridding so that things match EQ tomo
 latmin = -55.
-nlon = 26
+nlon = 31
 nlat = 42
 
 assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_lengths)==_npass,\
                len(_alphas)==_npass,len(_betas)==_npass,len(_lambdas)==_npass,\
                len(_fancy_names)>=_npass]), 'not enough parameters for %i passes' % _npass
 
-_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'
 #_skip_pairs = [('AY01','GUMN')]
+#_skip_stations = []
+_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'
+#_skip_stations = ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP']
 if _vtype == 'phase':
 #    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
 #                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
@@ -160,58 +163,58 @@ for period in _periods:
                              _betas[passnb], _lambdas[passnb], len(v.paths),
                              len(skippairs))
 
-        # we highlight paths that will be rejected
-        fig = v.plot(title=title, showplot=False,
-                     highlight_residuals_gt=maxresidual)
-
-        # appending fig to figures of period
-        periodfigs.append(fig)
+        if passnb == _npass-1:
+            # we highlight paths that will be rejected
+            fig = v.plot(title=title, showplot=False,
+                         highlight_residuals_gt=maxresidual)
+            # appending fig to figures of period
+            periodfigs.append(fig)
 
     else:
-        # if we did not break from loop:
-        # let's compare the 2-pass tomography with a one-pass tomography
-        s = ("One-pass tomography: grid step = {}, min SNR = {}, "
-             "corr. length = {} km, alpha = {}, beta = {}, lambda = {}")
-        print(s.format(_grid_steps[-1], _minspectsnrs[-1], _corr_lengths[-1],
-                        _alphas[-1], _betas[-1], _lambdas[-1]))
-
-        # tomographic inversion
-        try:
-            v = ant.VelocityMap(dispersion_curves=curves,
-                                    period=period,
-                                    verbose=False,
-                                    resolution_fit='gaussian',
-                                    min_resolution_height=minresheight,
-                                    lonstep=_grid_steps[-1],
-                                    latstep=_grid_steps[-1],
-                                    minspectSNR=_minspectsnrs[-1],
-                                    correlation_length=_corr_lengths[-1],
-                                    alpha=_alphas[-1],
-                                    beta=_betas[-1],
-                                    lambda_=_lambdas[-1],
-                                    vtype=_vtype,
-                                    lonmin=lonmin,
-                                    latmin=latmin,
-                                    nlon=nlon,
-                                    nlat=nlat)
-        except CannotPerformTomoInversion as err:
-            print("Cannot perform tomo inversion: {}".format(err))
-            for fig in periodfigs:
-                plt.close(fig)
-            # next period
-            continue
-
-        # figure
-        title = ("Period = {0} s, one pass, grid {1} x {1} deg, "
-                 "min SNR = {2}, corr. length = {3} km, alpha = {4}, "
-                 "beta = {5}, lambda = {6} ({7} paths)")
-        title = title.format(period, _grid_steps[-1], _minspectsnrs[-1],
-                             _corr_lengths[-1], _alphas[-1],
-                             _betas[-1], _lambdas[-1], len(v.paths))
-        fig = v.plot(title=title, showplot=False)
-
-        # appending fig to figures of period
-        periodfigs.append(fig)
+#       # if we did not break from loop:
+#       # let's compare the 2-pass tomography with a one-pass tomography
+#       s = ("One-pass tomography: grid step = {}, min SNR = {}, "
+#            "corr. length = {} km, alpha = {}, beta = {}, lambda = {}")
+#       print(s.format(_grid_steps[-1], _minspectsnrs[-1], _corr_lengths[-1],
+#                       _alphas[-1], _betas[-1], _lambdas[-1]))
+#
+#       # tomographic inversion
+#       try:
+#           v = ant.VelocityMap(dispersion_curves=curves,
+#                                   period=period,
+#                                   verbose=False,
+#                                   resolution_fit='gaussian',
+#                                   min_resolution_height=minresheight,
+#                                   lonstep=_grid_steps[-1],
+#                                   latstep=_grid_steps[-1],
+#                                   minspectSNR=_minspectsnrs[-1],
+#                                   correlation_length=_corr_lengths[-1],
+#                                   alpha=_alphas[-1],
+#                                   beta=_betas[-1],
+#                                   lambda_=_lambdas[-1],
+#                                   vtype=_vtype,
+#                                   lonmin=lonmin,
+#                                   latmin=latmin,
+#                                   nlon=nlon,
+#                                   nlat=nlat)
+#       except CannotPerformTomoInversion as err:
+#           print("Cannot perform tomo inversion: {}".format(err))
+#           for fig in periodfigs:
+#               plt.close(fig)
+#           # next period
+#           continue
+#
+#       # figure
+#       title = ("Period = {0} s, one pass, grid {1} x {1} deg, "
+#                "min SNR = {2}, corr. length = {3} km, alpha = {4}, "
+#                "beta = {5}, lambda = {6} ({7} paths)")
+#       title = title.format(period, _grid_steps[-1], _minspectsnrs[-1],
+#                            _corr_lengths[-1], _alphas[-1],
+#                            _betas[-1], _lambdas[-1], len(v.paths))
+#       fig = v.plot(title=title, showplot=False)
+#
+#       # appending fig to figures of period
+#       periodfigs.append(fig)
 
         # exporting figs to pdf
         for fig in periodfigs:
