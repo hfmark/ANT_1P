@@ -26,4 +26,4 @@ LHZ								char ch[]: channel name
 1								int fskip2: skip RmRESP() when set to 2, skip upon existence of target file when set to 1
 1								int fskip3: skip TempSpecNorm() when set to 2, skip upon existence of target file when set to 1
 1								int fskip4: skip CrossCorr() if target file exists when set to 1
-0								int CorOutflag: 0=monthly, 1=daily, 2=both
+1								int CorOutflag: 0=monthly, 1=daily, 2=both
