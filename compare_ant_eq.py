@@ -11,26 +11,26 @@ import os, sys
 ####
 
 # read in EQ tomography outputs
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
-#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/eikonal_stack_LHZ.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/save_noENAP/helmholtz_stack_all.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 
 # pick a period to compare
 if len(aphv[0]) == 8:  # just the test periods
-    #eind = 0; aind = 20.0; vmin = 3.2; vmax = 3.8  # eind for test period file
-    #eind = 1; aind = 25.0; vmin = 3.5; vmax = 3.8
-    eind = 2; aind = 32.0; vmin = 3.6; vmax = 3.9
+    #eind = 0; aind = 20.0; vmin=3.22; vmax=3.8  # eind for test period file
+    eind = 1; aind = 25.0; vmin = 3.429; vmax = 3.98
+    #eind = 2; aind = 32.0; vmin = 3.43; vmax = 4.07
 elif len(aphv[0]) == 24:  # all the periods
-    #eind = 0; aind = 20.0; vmin = 3.2; vmax = 3.8
-    #eind = 3; aind = 26.0; vmin = 3.5; vmax = 3.8
-    eind = 6; aind = 32.0; vmin = 3.6; vmax = 3.9
+    #eind = 0; aind = 20.0; vmin=3.22; vmax = 3.8
+    eind = 3; aind = 26.0; vmin = 3.429; vmax = 3.98
+    #eind = 6; aind = 32.0; vmin = 3.43; vmax = 4.07
 
 
 #aphv = ant.EQVelocityMap(aphv[:,eind],eik=True)
 aphv = ant.EQVelocityMap(aphv[:,eind],eik=False)
 
 # read in ANT outputs
-f = open('output/3-pass-tomography_phase.pickle','rb')
+#f = open('output/3-pass-tomography_phase.pickle','rb')
+f = open('output/4-pass-tomography_phase.pickle','rb')
 vmaps = pickle.load(f)
 f.close()
 try:
@@ -59,7 +59,15 @@ for i in range(len(lons)):
         diff[ix,iy] = avel - aphv.v[ix,iy]
     else:
         diff[ix,iy] = np.nan
-        
+
+# set vmin/vmax
+#m1 = np.nanmin(aphv.v)
+#m2 = np.nanmin(vant)
+#vmin = min(m1,m2)
+#m1 = np.nanmax(aphv.v)
+#m2 = np.nanmax(vant)
+#vmax = max(m1,m2)
+
 
 # read in some station info
 slon, slat = np.loadtxt(vr.sta_list,usecols=(1,2),unpack=True)
@@ -80,7 +88,7 @@ im2 = ax2.imshow(vant.T,\
 
 im3 = ax3.imshow(diff.T,\
 		extent=amap.grid.bbox(),
-		origin='bottom')
+		origin='bottom',cmap='PuOr')
 
 #r = amap.grid.to_2D_array(amap.Rradius)
 #m1 = ax2.imshow(r.T,\
