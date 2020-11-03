@@ -1,6 +1,7 @@
 *.swp
 logs_Seed2Cor/
 20??.???/
+19??.???/
 COR/
 month_COR/
 seed/
@@ -11,3 +12,5 @@ requests/mail.tem
 step.txt
 junk_*
 rdseed.err_log
+tfpws_in/
+tellus_pws/
