@@ -17,7 +17,7 @@ fnames = np.loadtxt('lines_per_list.dat',usecols=(1,),dtype=str)
 
 total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
 
-nlist  = 2; per_list = int(total/nlist)  # approximate # lines per list
+nlist  = 8; per_list = int(total/nlist)  # approximate # lines per list
 
 j = 0
 for i in range(nlist):
