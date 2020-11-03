@@ -13,6 +13,11 @@ import os, sys
         # put those in a directory named for the pair
 ####
 
+# NOTE that the list of corfiles is LONG
+# this could perhaps be made slightly less insane by listing month.year dirs and looping those,
+# then sub-looping pairs for each one. os.makedirs would be ok with that, pairs would
+# get added as the code progressed.
+
 corfiles = np.array(glob('????.???/COR_D/*/*.SAC'))  # all daily crosscorr files
 pairs = np.array(['_'.join(e.split('/')[-1].split('.')[0].split('_')[1:3]) for e in corfiles])
 u_pairs = np.unique(pairs)
