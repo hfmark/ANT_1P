@@ -45,6 +45,6 @@ for p in pairs:
     for j in range(len(corfiles)):
         fpos = corfiles[j]
         fneg = fpos[:-3]+'neg'
-        fout.write('%s\n%s\n' % (fpos, fneg))
+        fout.write('/master-ssd/hmark/%s\n%s\n' % (fpos, fneg))
 
     fout.close()
