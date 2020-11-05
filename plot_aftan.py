@@ -253,8 +253,11 @@ if __name__ == '__main__':
         ax3.set_xlabel('Instantaneous period [s]')
         ax3.legend(fontsize=9,loc='upper right')
         ax3.set_title('Clean FTAN')
-        ax3.set_xlim(xlm)
-        ax3.set_ylim(vmin,vmax)
+        try:
+            ax3.set_xlim(xlm)
+            ax3.set_ylim(vmin,vmax)
+        except ValueError:
+            pass
 
         #### station map
         #gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
