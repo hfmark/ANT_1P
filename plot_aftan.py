@@ -182,8 +182,7 @@ if __name__ == '__main__':
 
     inv = read_inventory('seed/dataless/combined.xml')
 
-    #for i in range(len(sta1_list)):
-    for i in range(10):
+    for i in range(len(sta1_list)):
         sta1 = sta1_list[i]; sta2 = sta2_list[i]
         if sta1 == sta2:
             continue
