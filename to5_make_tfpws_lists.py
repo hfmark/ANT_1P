@@ -48,3 +48,32 @@ for p in pairs:
         fout.write('/master-ssd/hmark/%s\n/master-ssd/hmark/%s\n' % (fpos, fneg))
 
     fout.close()
+
+
+# now that we have a list of daily xcor files for each pair of stations, make *lists of lists*
+# that are roughly equal in total size for running on the cluster
+
+# write out list of #lines-per-file for all the inputs
+os.system('wc -l tfpws_in/*in > lines_per_list.dat')
+
+# read in that list
+nln = np.loadtxt('lines_per_list.dat',usecols=(0,))
+fnames = np.loadtxt('lines_per_list.dat',usecols=(1,),dtype=str)
+
+total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
+
+nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
+
+j = 0
+for i in range(nlist):
+    fout = open('list_%i.dat' % i,'w')
+
+    lsum = 0
+    while lsum <= per_list and j < len(fnames):
+        middle = fnames[j].split('/')[-1][:-3]
+        fout.write('%s rm tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+
+        lsum += nln[j]
+        j += 1
+
+    fout.close()
