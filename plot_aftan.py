@@ -233,7 +233,12 @@ if __name__ == '__main__':
         gs3 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0)
         ax3 = fig.add_subplot(gs3[0,0])
 
-        ax3.imshow(amp,extent=[min(iper_amp),max(iper_amp),vmin,vmax],aspect='auto')
+        try:
+            ax3.imshow(amp,extent=[min(iper_amp),max(iper_amp),vmin,vmax],aspect='auto')
+        except ValueError:  # inf/nan
+            plt.close()
+            continue
+
         ax3.plot(iper,gvel,color='k',label='group')
         ax3.plot(iper,pvel,color='r',label='phase')
         ax3.plot([cfp,cfp],[vmin,vmax],color='grey')
@@ -253,11 +258,8 @@ if __name__ == '__main__':
         ax3.set_xlabel('Instantaneous period [s]')
         ax3.legend(fontsize=9,loc='upper right')
         ax3.set_title('Clean FTAN')
-        try:
-            ax3.set_xlim(xlm)
-            ax3.set_ylim(vmin,vmax)
-        except ValueError:
-            pass
+        ax3.set_xlim(xlm)
+        ax3.set_ylim(vmin,vmax)
 
         #### station map
         #gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
