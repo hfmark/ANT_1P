@@ -11,17 +11,19 @@ import os, sys
 ####
 
 # read in EQ tomography outputs
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/save_noENAP/helmholtz_stack_all.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/save_noENAP/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/save_ENAP_noMG/helmholtz_stack_all.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 
 # pick a period to compare
 if len(aphv[0]) == 8:  # just the test periods
-    #eind = 0; aind = 20.0; vmin=3.22; vmax=3.8  # eind for test period file
-    eind = 1; aind = 25.0; vmin = 3.429; vmax = 3.98
+    eind = 0; aind = 20.0; vmin=3.22; vmax=3.8  # eind for test period file
+    #eind = 1; aind = 25.0; vmin = 3.429; vmax = 3.98
     #eind = 2; aind = 32.0; vmin = 3.43; vmax = 4.07
 elif len(aphv[0]) == 24:  # all the periods
-    #eind = 0; aind = 20.0; vmin=3.22; vmax = 3.8
-    eind = 3; aind = 26.0; vmin = 3.429; vmax = 3.98
+    eind = 0; aind = 20.0; vmin=3.22; vmax = 3.8
+    #eind = 3; aind = 26.0; vmin = 3.429; vmax = 3.98
     #eind = 6; aind = 32.0; vmin = 3.43; vmax = 4.07
 
 
@@ -29,13 +31,14 @@ elif len(aphv[0]) == 24:  # all the periods
 aphv = ant.EQVelocityMap(aphv[:,eind],eik=False)
 
 # read in ANT outputs
-#f = open('output/3-pass-tomography_phase.pickle','rb')
 f = open('output/4-pass-tomography_phase.pickle','rb')
+#f = open('output/pws_noENAP/4-pass-tomography_phase.pickle','rb')
+#f = open('output/noENAP/3-pass-tomography_phase.pickle','rb')
 vmaps = pickle.load(f)
 f.close()
 try:
     vmaps[aind]
-except IndexError:
+except KeyError:
     aind = 25.0  # 25/26 potential mismatch if EQ is all and ANT is test
 vant = vmaps[aind].grid.to_2D_array(vmaps[aind].v0 / (1 + vmaps[aind].mopt))
 amap = vmaps[aind]
@@ -79,20 +82,21 @@ ax2 = plt.subplot2grid((1,3),(0,1))
 ax3 = plt.subplot2grid((1,3),(0,2))
 im1 = ax1.imshow(aphv.v.T,\
 		extent=amap.grid.bbox(),\
-		origin='bottom',cmap='seismic_r',vmin=vmin,vmax=vmax)
+		origin='lower',cmap='seismic_r',vmin=vmin,vmax=vmax)
 
 im2 = ax2.imshow(vant.T,\
 		extent=amap.grid.bbox(),
-		origin='bottom',cmap='seismic_r',vmin=vmin,vmax=vmax) #,\
+		origin='lower',cmap='seismic_r',vmin=vmin,vmax=vmax) #,\
 	       # interpolation='bicubic')
 
 im3 = ax3.imshow(diff.T,\
 		extent=amap.grid.bbox(),
-		origin='bottom',cmap='PuOr')
+		origin='lower',cmap='PuOr')
+ax3.contour(diff.T,levels=(-0.1,0.1),colors=('c','r'),extent=amap.grid.bbox(),origin='lower')
 
 #r = amap.grid.to_2D_array(amap.Rradius)
 #m1 = ax2.imshow(r.T,\
-#	        origin='bottom', extent=amap.grid.bbox(),\
+#	        origin='lower', extent=amap.grid.bbox(),\
 #		interpolation='bicubic',cmap=ant.CMAP_MASK)  
 
 ant.basemap(ax=ax1,bbox=amap.grid.bbox())

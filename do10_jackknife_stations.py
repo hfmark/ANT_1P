@@ -21,18 +21,18 @@ f.close()
 stations = np.unique(np.hstack(([c.station1.name for c in curves],[c.station2.name for c in curves])))
 
 # choose tomo parameters
-period = 18.0
+period = 8.0
 vtype = 'phase'
 grid_step = 0.3
 minspectsnr = 5.0
-corr_length = 32
+corr_length = 50
 alpha = 200
 beta = 25
 lam = 0.3
 minresheight = 0.02
 lonmin = -76.  # override automatic gridding so that things match EQ tomo
 latmin = -55.
-nlon = 26
+nlon = 31
 nlat = 42
 
 # set up output pdf
@@ -45,9 +45,12 @@ pdf = PdfPages(opdf)
 
 skippairs = []
 
+
 # loop stations for skip_stations, do tomo, plot with a title that says what was skipped
 for sta in stations:
-    skip_stations = [sta]
+    if sta in ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP']:
+        continue  # no need to do ENAP stations
+    skip_stations = ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP',sta]
     print('testing: %s, %.1f s' % (sta, period))
 
     v = ant.VelocityMap(dispersion_curves=curves,

@@ -19,8 +19,8 @@ f.close()
 plt.ioff()
 
 # set tomography parameters to loop over for n passes
-#_vtype = 'group'
-_vtype = 'phase'
+#_vtype = 'phase'
+_vtype = 'group'
 
 if _vtype == 'phase':
     _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
@@ -49,15 +49,16 @@ assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_len
 
 #_skip_pairs = [('AY01','GUMN')]
 #_skip_stations = []
-_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'
-#_skip_stations = ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP']
+#_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'  # from previous version with linear stack
+_skip_stations = ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP']
 if _vtype == 'phase':
 #    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
 #                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
 #                    ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
                     # 8s(x3), 14s(x4), 20s(x4), 26s(x1)
-    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-                    ('COYC','MG04'),('GO08','GRAF')]
+#    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
+#                    ('COYC','MG04'),('GO08','GRAF')]
+    _skip_pairs = [('RMG01','RPR01')]  # this was from pws but maybe still holds?
 elif _vtype == 'group':
     _skip_pairs = []
 
