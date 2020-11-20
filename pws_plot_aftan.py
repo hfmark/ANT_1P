@@ -14,16 +14,16 @@ import os, sys
 # (maybe with station info/map/xcors as in pysismo?)
 ####
 
-def read_AMP(sta1,sta2,iper,nf=2,root='COR/',return_dist=False):
+def read_AMP(sta1,sta2,iper,nf=2,root='COR/stacks/',return_dist=False):
     """
     read amplitudes from aftan output file
     return array where each row is a velocity and each column is a period
     """
     # find amplitude file
-    fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_AMP' % (sta1,sta2,nf))
+    fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_%i_AMP' % (sta1,sta2,nf))
     if not os.path.isfile(fname):
         sta1, sta2 = sta2, sta1  # swap station order and try again
-        fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_AMP' % (sta1,sta2,nf))
+        fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_%i_AMP' % (sta1,sta2,nf))
         if not os.path.isfile(fname):
             print('no AMP file for %s, %s' % (sta1,sta2))
             return
@@ -60,7 +60,7 @@ def read_AMP(sta1,sta2,iper,nf=2,root='COR/',return_dist=False):
         return amp, vmin, vmax, dist
     return amp, vmin, vmax
 
-def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
+def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/stacks/'):
     """
     read dispersion curves from aftan output file
     return nominal and instantaneous periods, group and phase velocities
@@ -68,10 +68,10 @@ def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
     # find disp file:
     # nf=1 for pre-phase matched filtering, nf=2 for filtered
     # itr=0 for initial curves without jump correction, itr=1 for final curves
-    fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
+    fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_%i_DISP.%i' % (sta1,sta2,nf,itr))
     if not os.path.isfile(fname):
         sta1, sta2 = sta2, sta1
-        fname = os.path.join(root,'COR_%s_%s_full.SAC_%i_DISP.%i' % (sta1,sta2,nf,itr))
+        fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_%i_DISP.%i' % (sta1,sta2,nf,itr))
         if not os.path.isfile(fname):
             print('no DISP file for %s, %s' % (sta1, sta2))
             return
@@ -81,7 +81,7 @@ def read_DISP(sta1,sta2,nf=2,itr=1,root='COR/'):
 
     return cper, iper, gvel, pvel
 
-def calc_cutoffperiod(sta1,sta2,dist,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,iper=None):
+def calc_cutoffperiod(sta1,sta2,dist,wvln=2.5,nf=2,itr=1,root='COR/stacks/',gvel=None,iper=None):
     """
     find the max period we want to use for a given station pair based on 
     station spacing and a minimum number of wavelengths and the estimated group velocities
@@ -97,15 +97,15 @@ def calc_cutoffperiod(sta1,sta2,dist,wvln=2.5,nf=2,itr=1,root='COR/',gvel=None,i
 
     return cutoffperiod
 
-def read_snr_precalc(sta1,sta2,root='COR/'):
+def read_snr_precalc(sta1,sta2,root='COR/stacks/'):
     """
     read snr calculated prior to ftan (referenced to center periods)
     """
     # get snr filename
-    fname = os.path.join(root,'COR_%s_%s_full.SAC_s_snr.cv.p.txt' % (sta1,sta2))
+    fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_snr.cv.p.txt' % (sta1,sta2))
     if not os.path.exists(fname):
         sta1, sta2 = sta2, sta1
-        fname = os.path.join(root,'COR_%s_%s_full.SAC_s_snr.cv.p.txt' % (sta1,sta2))
+        fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn_snr.cv.p.txt' % (sta1,sta2))
         if not os.path.exists(fname):
             print('no snr file found for %s, %s' % (sta1, sta2))
             return
@@ -169,7 +169,7 @@ def get_ndays(sta1,sta2,root='COR/'):
     
 if __name__ == '__main__':
 
-    done_list = np.sort(glob('COR/*full*2_AMP'))  # only plot sets that *have* a final result
+    done_list = np.sort(glob('COR/stacks/*full*2_AMP'))  # only plot sets that *have* a final result
     sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
     sta2_list = [e.split('/')[-1].split('_')[2].split('.')[0] for e in done_list]
 
@@ -187,8 +187,8 @@ if __name__ == '__main__':
         if sta1 == sta2:
             continue
         # check for all necessary files:
-        disp = glob('COR/COR_%s_%s*full*DISP*' % (sta1, sta2))
-        amp = glob('COR/COR_%s_%s*full*AMP*' % (sta1, sta2))
+        disp = glob('COR/stacks/tf_%s_%s*full*DISP*' % (sta1, sta2))
+        amp = glob('COR/stacks/tf_%s_%s*full*AMP*' % (sta1, sta2))
         if len(disp) != 4 or len(amp) != 2:  # file is probably missing
             print('skipping %s-%s, some files missing' % (sta1,sta2))
             continue
@@ -288,11 +288,11 @@ if __name__ == '__main__':
         gs5.update(left=0.84,right=0.98,top=0.44)
 
         # plot title
-        ndays = get_ndays(sta1,sta2)
-        fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1,inv), sta1, \
-                    find_sta_network(sta2,inv), sta2, dist, ndays), fontsize=14)
-        #fig.suptitle('%s.%s - %s.%s: %.2f km' % (find_sta_network(sta1,inv), sta1, \
-        #            find_sta_network(sta2,inv), sta2, dist), fontsize=14)
+        #ndays = get_ndays(sta1,sta2)
+        #fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1,inv), sta1, \
+        #            find_sta_network(sta2,inv), sta2, dist, ndays), fontsize=14)
+        fig.suptitle('%s.%s - %s.%s: %.2f km' % (find_sta_network(sta1,inv), sta1, \
+                    find_sta_network(sta2,inv), sta2, dist), fontsize=14)
 
         pdf.savefig(fig)
         plt.close()
