@@ -12,16 +12,17 @@ import os, sys
 ####
 
 # read in EQ tomography outputs
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 emaps = {aphv[:,i]['period'][0][0][0]:ant.EQVelocityMap(aphv[:,i]) for i in range(len(aphv[0]))}
 
 # read in ANT outputs
-f = open('output/3-pass-tomography_phase.pickle','rb')
+f = open('output/4-pass-tomography_phase.pickle','rb')
 vmaps = pickle.load(f)
 f.close()
 
-f = open('output/3-pass-tomography_group.pickle','rb')
+f = open('output/4-pass-tomography_group.pickle','rb')
 vmaps_group = pickle.load(f)
 f.close()
 
