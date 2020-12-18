@@ -3,6 +3,7 @@ import scipy.io as sio
 import matplotlib.pyplot as plt
 import mods.PAT.anttomo as ant
 import mods.PAT.files as vr
+import ScientificColourMaps6 as SCM6
 import pickle
 import os, sys
 
@@ -11,29 +12,32 @@ import os, sys
 ####
 
 # read in EQ tomography outputs
-#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/save_noENAP/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
-#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/save_ENAP_noMG/helmholtz_stack_all.mat'),variable_names='avgphv')
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAPnoamp_noMG.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAP_noMG_noRMG.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 
 # pick a period to compare
 if len(aphv[0]) == 8:  # just the test periods
-    eind = 0; aind = 20.0; vmin=3.22; vmax=3.8  # eind for test period file
-    #eind = 1; aind = 25.0; vmin = 3.429; vmax = 3.98
-    #eind = 2; aind = 32.0; vmin = 3.43; vmax = 4.07
+    #eind = 0; aind = 20.0; vlm = vr.vlims[20]
+    eind = 1; aind = 25.0; vlm = vr.vlims[26]
+    #eind = 2; aind = 32.0; vlm = vr.vlims[32]
 elif len(aphv[0]) == 24:  # all the periods
-    eind = 0; aind = 20.0; vmin=3.22; vmax = 3.8
-    #eind = 3; aind = 26.0; vmin = 3.429; vmax = 3.98
-    #eind = 6; aind = 32.0; vmin = 3.43; vmax = 4.07
+    #eind = 0; aind = 20.0; vlm = vr.vlims[20]
+    eind = 3; aind = 26.0; vlm = vr.vlims[26]
+    #eind = 6; aind = 32.0; vlm = vr.vlims[32]
 
 
 #aphv = ant.EQVelocityMap(aphv[:,eind],eik=True)
 aphv = ant.EQVelocityMap(aphv[:,eind],eik=False)
 
 # read in ANT outputs
-f = open('output/4-pass-tomography_phase.pickle','rb')
+#f = open('output/4-pass-tomography_phase.pickle','rb')
+#f = open('output/lin_noENAP/4-pass-tomography_phase.pickle','rb')
+f = open('output/lin_ENAP_noMG/4-pass-tomography_phase.pickle','rb')
+#f = open('output/pws_ENAP_noMG/4-pass-tomography_phase.pickle','rb')
 #f = open('output/pws_noENAP/4-pass-tomography_phase.pickle','rb')
-#f = open('output/noENAP/3-pass-tomography_phase.pickle','rb')
+#f = open('output/pws_noENAP_noMG/4-pass-tomography_phase.pickle','rb')
 vmaps = pickle.load(f)
 f.close()
 try:
@@ -63,15 +67,6 @@ for i in range(len(lons)):
     else:
         diff[ix,iy] = np.nan
 
-# set vmin/vmax
-#m1 = np.nanmin(aphv.v)
-#m2 = np.nanmin(vant)
-#vmin = min(m1,m2)
-#m1 = np.nanmax(aphv.v)
-#m2 = np.nanmax(vant)
-#vmax = max(m1,m2)
-
-
 # read in some station info
 slon, slat = np.loadtxt(vr.sta_list,usecols=(1,2),unpack=True)
 
@@ -82,17 +77,19 @@ ax2 = plt.subplot2grid((1,3),(0,1))
 ax3 = plt.subplot2grid((1,3),(0,2))
 im1 = ax1.imshow(aphv.v.T,\
 		extent=amap.grid.bbox(),\
-		origin='lower',cmap='seismic_r',vmin=vmin,vmax=vmax)
+		origin='lower',cmap=SCM6.roma)
+im1.set_clim(vlm)
 
 im2 = ax2.imshow(vant.T,\
 		extent=amap.grid.bbox(),
-		origin='lower',cmap='seismic_r',vmin=vmin,vmax=vmax) #,\
+		origin='lower',cmap=SCM6.roma) #,\
 	       # interpolation='bicubic')
+im2.set_clim(vlm)
 
 im3 = ax3.imshow(diff.T,\
 		extent=amap.grid.bbox(),
-		origin='lower',cmap='PuOr')
-ax3.contour(diff.T,levels=(-0.1,0.1),colors=('c','r'),extent=amap.grid.bbox(),origin='lower')
+		origin='lower',cmap=SCM6.cork)
+ax3.contour(diff.T,levels=(-0.1,0.1),colors=('r','m'),extent=amap.grid.bbox(),origin='lower')
 
 #r = amap.grid.to_2D_array(amap.Rradius)
 #m1 = ax2.imshow(r.T,\
