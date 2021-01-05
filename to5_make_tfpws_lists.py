@@ -53,6 +53,9 @@ for p in pairs:
 # now that we have a list of daily xcor files for each pair of stations, make *lists of lists*
 # that are roughly equal in total size for running on the cluster
 
+# UPDATE 01.04.2021: write many more lists of 1200 lines each because that seems to be
+# the limit for what xargs will run before just stopping? At least I think it was 1200 (or 1600)
+
 # write out list of #lines-per-file for all the inputs
 os.system('wc -l tfpws_in/*in > lines_per_list.dat')
 
@@ -62,7 +65,8 @@ fnames = np.loadtxt('lines_per_list.dat',usecols=(1,),dtype=str)
 
 total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
 
-nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
+#nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
+per_list = 1200; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
 
 j = 0
 for i in range(nlist):
@@ -71,7 +75,7 @@ for i in range(nlist):
     lsum = 0
     while lsum <= per_list and j < len(fnames):
         middle = fnames[j].split('/')[-1][:-3]
-        fout.write('%s rm tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+        fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
 
         lsum += nln[j]
         j += 1
