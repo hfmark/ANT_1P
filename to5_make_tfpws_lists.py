@@ -65,6 +65,8 @@ fnames = np.loadtxt('lines_per_list.dat',usecols=(1,),dtype=str)
 
 total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
 
+total = len(nln)  # instead of lines of lines, just lines
+
 #nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
 per_list = 1200; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
 
