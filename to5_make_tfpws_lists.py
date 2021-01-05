@@ -75,7 +75,7 @@ for i in range(nlist):
     fout = open('list_%i.dat' % i,'w')
 
     lsum = 0
-    while lsum <= per_list and j < len(fnames):
+    while lsum < per_list and j < len(fnames):
         middle = fnames[j].split('/')[-1][:-3]
         fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
 
