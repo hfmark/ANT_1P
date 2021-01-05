@@ -53,8 +53,8 @@ for p in pairs:
 # now that we have a list of daily xcor files for each pair of stations, make *lists of lists*
 # that are roughly equal in total size for running on the cluster
 
-# UPDATE 01.04.2021: write many more lists of 1200 lines each because that seems to be
-# the limit for what xargs will run before just stopping? At least I think it was 1200 (or 1600)
+# UPDATE 01.04.2021: write many more lists of [per_list] lines each because that seems to be
+# the limit for what xargs will run before just stopping?
 
 # write out list of #lines-per-file for all the inputs
 os.system('wc -l tfpws_in/*in > lines_per_list.dat')
@@ -68,7 +68,7 @@ total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
 total = len(nln)  # instead of lines of lines, just lines
 
 #nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
-per_list = 1200; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
+per_list = 600; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
 
 j = 0
 for i in range(nlist):
