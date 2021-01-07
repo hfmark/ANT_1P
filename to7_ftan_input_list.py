@@ -31,12 +31,12 @@ cor_list = cor_list[twosta]
 
 phfile = 'ak135_phvel.dat'
 
-minp = 3; maxp = 45
+minp = 3; maxp = 50
 pp = np.arange(minp,maxp+1)
 minv = 1.7; maxv = 5.2;
 minSNR = 5;
 
-thresh = 20;
+thresh = 10;
 ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
 f = open('aftan.lst','w')  # output file for input to aftan
