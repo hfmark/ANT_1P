@@ -21,7 +21,7 @@ for fname in corfiles:
     # find list file from stacking, use to get ndays in stack
     middle = fname.split('/')[-1][3:-4]
     listfile = 'tfpws_in/'+middle+'in'
-    ndays = sum(1 for line in open(listfile,'r'))o
+    ndays = sum(1 for line in open(listfile,'r'))
     st[0].stats.sac['user0'] = int(ndays)  # add to sac header
 
     st.write(fname_out,'SAC')
