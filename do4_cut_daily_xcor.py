@@ -41,12 +41,6 @@ for p in u_pairs:
         st2[0].data = st2[0].data[::-1]   # reverse
         st2[0].data = st2[0].data[3000:]  # and trim
 
-        # try fixing sac headers here so we don't need to do it later/confuse aftan
-        st1[0].stats.sac.b = 0.
-        st1[0].stats.sac.e = 3000.
-        st2[0].stats.sac.b = 0.
-        st2[0].stats.sac.e = 3000.
-
         # rewrite halves
         day_str = '.'.join([flist[i].split('/')[0],flist[i].split('/')[-1].split('.')[0].split('_')[-1]])
         f_pos = '_'.join([p,day_str]) + '.SACpos'
