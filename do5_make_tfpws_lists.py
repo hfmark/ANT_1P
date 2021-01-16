@@ -72,7 +72,7 @@ per_list = 600; nlist = int(total/per_list) + 1  # assuming not a multiple of 12
 
 j = 0
 for i in range(nlist):
-    fout = open('list_%i.dat' % i,'w')
+    fout = open('tellus_lists/list_%i.dat' % i,'w')
 
     lsum = 0
     while lsum < per_list and j < len(fnames):
