@@ -39,9 +39,16 @@ minSNR = 5;
 thresh = 10;
 ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
-f = open('aftan.lst','w')  # output file for input to aftan
+per_file = 1000
+suffix_counter = 0
 
-for cf in cor_list:
+f = open('aftan_%i.lst' % suffix_counter,'w')
+
+for i,cf in enumerate(cor_list):
+    if i%per_file == 0 and i > 0: # not the first file
+        f.close()
+        suffix_counter += 1
+        f = open('aftan_%i.lst' % suffix_counter,'w')
     # find corresponding snr file, get period range for dispersion curve calc
     sf = cf+'_snr.cv.p.txt'
     per,snr = np.loadtxt(sf,usecols=(0,1),unpack=True)
