@@ -41,7 +41,7 @@ do7_ftan_input_list.py
 do8_aftan.sh
     run aftan
 
-**do9_make_disp_curves.py [** -> run on laptop]
+**do9_make_disp_curves.py [** -> run locally, not on server]
     read aftan output and make/pickle DispersionCurve python objects
 
 **do10_params_tomo.py
