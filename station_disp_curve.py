@@ -11,9 +11,11 @@ import os, sys
 # read maps from EQ and ANT tomo, read stations, get disp curves for station locations
 ####
 
+plot_group = False
+
 # read in EQ tomography outputs
-#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/matgsdf-patagonia/helmholtz_stack_LHZ.mat'),variable_names='avgphv')
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')  # current last version, with station exclusions set
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAPnoamp_noMG.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 emaps = {aphv[:,i]['period'][0][0][0]:ant.EQVelocityMap(aphv[:,i]) for i in range(len(aphv[0]))}
 
@@ -22,9 +24,10 @@ f = open('output/4-pass-tomography_phase.pickle','rb')
 vmaps = pickle.load(f)
 f.close()
 
-f = open('output/4-pass-tomography_group.pickle','rb')
-vmaps_group = pickle.load(f)
-f.close()
+if plot_group:
+    f = open('output/4-pass-tomography_group.pickle','rb')
+    vmaps_group = pickle.load(f)
+    f.close()
 
 opdf = '../Plots/disp_curve_stations.pdf'
 pdf = PdfPages(opdf)
@@ -36,7 +39,8 @@ slon,slat = np.loadtxt(vr.sta_list, usecols=(1,2), unpack=True)
 # periods for both
 eper = [emaps[k].period for k in emaps.keys()]
 aper = [vmaps[k].period for k in vmaps.keys()]
-gper = [vmaps_group[k].period for k in vmaps_group.keys()]
+if plot_group:
+    gper = [vmaps_group[k].period for k in vmaps_group.keys()]
 
 plt.ioff()
 # for a station, get velocities from ANT and EQ and plot both? to see how they compare?
@@ -47,11 +51,12 @@ for i in range(len(stnm)):
         avel = [vmaps[k].interp_velocity(slon[i],slat[i]) for k in vmaps.keys()]
         astd = [max(2./vmaps[k].density_interp(slon[i],slat[i])[0], 0.05) for k in vmaps.keys()]
         astd = [min(0.2,e) for e in astd]
-        gvel = [vmaps_group[k].interp_velocity(slon[i],slat[i]) for k in vmaps_group.keys()]
-        # NOTE this assumes set of ant phase periods includes all of the group periods
-        gstd = [max(2./vmaps[k].density_interp(slon[i],slat[i])[0], 0.05) for k in vmaps_group.keys()]
-        gstd = [min(0.2,e) for e in gstd]
-        gstd = 2.5*np.array(gstd)
+        if plot_group:
+            gvel = [vmaps_group[k].interp_velocity(slon[i],slat[i]) for k in vmaps_group.keys()]
+            # NOTE this assumes set of ant phase periods includes all of the group periods
+            gstd = [max(2./vmaps[k].density_interp(slon[i],slat[i])[0], 0.05) for k in vmaps_group.keys()]
+            gstd = [min(0.2,e) for e in gstd]
+            gstd = 2.5*np.array(gstd)
     except:
         print(stnm[i])
         continue  # probably a bounds error for interpolation
@@ -59,8 +64,9 @@ for i in range(len(stnm)):
     fig = plt.figure()
     #plt.plot(aper, avel, '.-', label='ambient, phase')
     plt.errorbar(aper, avel, yerr=astd, fmt='.-', label='ambient, phase')
-    #plt.plot(gper, gvel, '.-', label='ambient, group')
-    plt.errorbar(gper, gvel, yerr=gstd, fmt='.-', label='ambient, group')
+    if plot_group:
+        #plt.plot(gper, gvel, '.-', label='ambient, group')
+        plt.errorbar(gper, gvel, yerr=gstd, fmt='.-', label='ambient, group')
     #plt.plot(eper, evel, '.-', label='EQ')
     plt.errorbar(eper, evel, yerr=estd, fmt='.-', label='EQ, phase')
     plt.legend(fontsize=9)
