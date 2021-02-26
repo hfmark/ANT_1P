@@ -9,7 +9,6 @@ import os, sys
 
 ####
 # read maps from anttomo and RayTomo and compare at one period
-# TODO: EVERYTHING. Not currently functioning.
 ####
 
 period = 32.
