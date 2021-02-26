@@ -19,46 +19,39 @@ f.close()
 plt.ioff()
 
 # set tomography parameters to loop over for n passes
-#_vtype = 'phase'
-_vtype = 'group'
+_vtype = 'phase'
+#_vtype = 'group'
 
 if _vtype == 'phase':
-    _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34.]
+    _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30., 32., 34., 36., 38., 40.]
 elif _vtype == 'group':
     _periods = [8., 9., 10., 11., 12., 13., 14., 15., 16., 17., 18., 19., 20., 22., 24., 26., 28., 30.]
 
-#_periods = [8.0, 14.0, 20.0, 25.0, 32.0]  # tests only
+#_periods = [8.0, 14.0, 20.0, 26.0, 32.0]  # tests only
+_periods = [8.0, 14.0, 15.0, 16.0, 17.0, 20.0, 26.0, 32.0, 38.0]
 
 _npass = 4
 _grid_steps = 0.3*np.ones(_npass)
 _minspectsnrs = 5.0*np.ones(_npass)
 _corr_lengths = 50*np.ones(_npass) # 50 seems better than 100
-_alphas = (600,400,300,200)
+_alphas = (600,400,250,150)
 _betas = 25*np.ones(_npass)
 _lambdas = 0.3*np.ones(_npass)
 _fancy_names = ('1st','2nd','3rd','4th')
 minresheight = 0.02
-lonmin = -76.  # override automatic gridding so that things match EQ tomo
-latmin = -55.
-nlon = 31
+lonmin = -75.9  # override automatic gridding so that things match EQ tomo
+latmin = -55.2
+nlon = 29
 nlat = 42
 
 assert np.all([len(_grid_steps)==_npass,len(_minspectsnrs)==_npass,len(_corr_lengths)==_npass,\
                len(_alphas)==_npass,len(_betas)==_npass,len(_lambdas)==_npass,\
                len(_fancy_names)>=_npass]), 'not enough parameters for %i passes' % _npass
 
-#_skip_pairs = [('AY01','GUMN')]
 #_skip_stations = []
-#_skip_stations = ['CHN01','VOH01'] # 'RRS01' 'COC01'  # from previous version with linear stack
-_skip_stations = ['ANMA','BQON','DGER','LAVG','LOSC','MJTA','RGND','TROP']
+_skip_stations = ['MG01','VTDF','DSPA','VOH01','DGER','RGND']
 if _vtype == 'phase':
-#    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-#                    ('RRS01','VOH01'),('RMG01','VCC01'),('AMG01','COC01'),('CHN01','VOH01'),\
-#                    ('AY01','LSMN'),('LSR01','VOH01'),('GO08','GRAF')]
-                    # 8s(x3), 14s(x4), 20s(x4), 26s(x1)
-#    _skip_pairs = [('ANMA','DGER'),('COYC','TAPA'),('CURI','RPTE'),('DGER','GO08'),('MG04','RGND'),\
-#                    ('COYC','MG04'),('GO08','GRAF')]
-    _skip_pairs = [('RMG01','RPR01')]  # this was from pws but maybe still holds?
+    _skip_pairs = []
 elif _vtype == 'group':
     _skip_pairs = []
 
@@ -73,8 +66,17 @@ pdf = PdfPages(opdf)
 
 vmaps = {} # dict for final maps at each period
 
+def last_alpha(period,alpha=(600,400,250,150)):  # TODO: adjust this as needed
+    alpha = np.array(alpha)
+    if period < 18: alpha = np.array([900,700,600,400])
+    if period >= 18 and period < 22: alpha = np.array([750,600,450,300])
+    return tuple(alpha)
+
 for period in _periods:
     print("\nDoing period {} s".format(period))
+
+    # recalculate the final pass alpha value(s) for this period
+    _alphas = last_alpha(period)
 
     periodfigs = []
 
