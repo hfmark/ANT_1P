@@ -16,3 +16,5 @@ rdseed.err_log
 tfpws_in/
 tellus_pws/
 test_pws/
+rt_inputs/
+rt_outputs/
