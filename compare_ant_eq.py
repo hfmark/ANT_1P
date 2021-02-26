@@ -12,29 +12,31 @@ import os, sys
 ####
 
 # read in EQ tomography outputs
-aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAPnoamp_noMG.mat'),variable_names='avgphv')
+#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAPnoamp_noMG.mat'),variable_names='avgphv')
 #aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_ENAP_noMG_noRMG.mat'),variable_names='avgphv')
-#aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
+aphv = sio.loadmat(os.path.expanduser('~/Patagonia/EQ_tomo/helmholtz_stack_all.mat'),variable_names='avgphv')
 aphv = aphv['avgphv']
 
 # pick a period to compare
 if len(aphv[0]) == 8:  # just the test periods
     #eind = 0; aind = 20.0; vlm = vr.vlims[20]
-    eind = 1; aind = 25.0; vlm = vr.vlims[26]
-    #eind = 2; aind = 32.0; vlm = vr.vlims[32]
+    #eind = 1; aind = 25.0; vlm = vr.vlims[26]
+    eind = 2; aind = 32.0; vlm = vr.vlims[32]
 elif len(aphv[0]) == 24:  # all the periods
     #eind = 0; aind = 20.0; vlm = vr.vlims[20]
-    eind = 3; aind = 26.0; vlm = vr.vlims[26]
+    #eind = 3; aind = 26.0; vlm = vr.vlims[26]
     #eind = 6; aind = 32.0; vlm = vr.vlims[32]
+    #eind = 8; aind = 36.0; vlm = vr.vlims[36]
+    eind = 10; aind = 40.0; vlm = vr.vlims[40]
 
 
 #aphv = ant.EQVelocityMap(aphv[:,eind],eik=True)
 aphv = ant.EQVelocityMap(aphv[:,eind],eik=False)
 
 # read in ANT outputs
-#f = open('output/4-pass-tomography_phase.pickle','rb')
+f = open('output/4-pass-tomography_phase.pickle','rb')
 #f = open('output/lin_noENAP/4-pass-tomography_phase.pickle','rb')
-f = open('output/lin_ENAP_noMG/4-pass-tomography_phase.pickle','rb')
+#f = open('output/lin_ENAP_noMG/4-pass-tomography_phase.pickle','rb')
 #f = open('output/pws_ENAP_noMG/4-pass-tomography_phase.pickle','rb')
 #f = open('output/pws_noENAP/4-pass-tomography_phase.pickle','rb')
 #f = open('output/pws_noENAP_noMG/4-pass-tomography_phase.pickle','rb')
@@ -88,7 +90,7 @@ im2.set_clim(vlm)
 
 im3 = ax3.imshow(diff.T,\
 		extent=amap.grid.bbox(),
-		origin='lower',cmap=SCM6.cork)
+		origin='lower',cmap=SCM6.cork,vmin=-0.2,vmax=0.2)
 ax3.contour(diff.T,levels=(-0.1,0.1),colors=('r','m'),extent=amap.grid.bbox(),origin='lower')
 
 #r = amap.grid.to_2D_array(amap.Rradius)
