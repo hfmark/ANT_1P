@@ -10,7 +10,7 @@ import pickle
 import os, sys
 
 ####
-# read maps from EQ and ANT tomo, compare at one period
+# read maps from EQ and ANT tomo, compare at one period. ISOTROPIC.
 ####
 
 # read in EQ tomography outputs
