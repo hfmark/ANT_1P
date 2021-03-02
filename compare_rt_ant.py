@@ -22,6 +22,8 @@ ax1 = plt.subplot2grid((1,4),(0,0),projection=ccrs.PlateCarree())
 ax2 = plt.subplot2grid((1,4),(0,1),projection=ccrs.PlateCarree())
 ax3 = plt.subplot2grid((1,4),(0,2),projection=ccrs.PlateCarree())
 ax4 = plt.subplot2grid((1,4),(0,3),projection=ccrs.PlateCarree())
+xtk = np.arange(-75,-68,3)
+ytk = np.arange(-55,-43,3)
 
 # read anttomo outputs
 f = open('output/4-pass-tomography_phase.pickle','rb')
@@ -57,8 +59,6 @@ lon,lat,vph = np.loadtxt('rt_outputs/tomo_iso_phase_3_%i.1' % (period),usecols=(
 # set up triangulation for grid
 xi = np.arange(min(lon),max(lon),0.3)
 yi = np.arange(min(lat),max(lat),0.3)
-xtk = np.arange(-75,-68,3)
-ytk = np.arange(-55,-43,3)
 
 # interpolate velocities
 triang = tri.Triangulation(lon,lat)
