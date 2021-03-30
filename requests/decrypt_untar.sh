@@ -9,8 +9,8 @@ if [ "$1" == ""]; then
    exit 0
 fi
 
-seeddir=./seed/1P
-
+#seeddir=./seed/1P
+seeddir=./seed/second_half_1P
 
 
 cd $seeddir
