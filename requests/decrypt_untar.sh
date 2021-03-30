@@ -4,7 +4,7 @@
 ## decrypt data with openssl, untar, and get rid of encrypted files and archives
 # give decryption password as a command line argument
 
-if [ "$1" == ""]; then
+if [ "$1" == "" ]; then
    echo 'please supply a password for decryption'
    exit 0
 fi
