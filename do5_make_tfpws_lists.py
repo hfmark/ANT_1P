@@ -83,6 +83,6 @@ for i in range(nlist):
             fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
 
             lsum += 1
-            j += 1
+        j += 1
 
     fout.close()
