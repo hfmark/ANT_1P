@@ -4,8 +4,8 @@ from obspy import read_inventory
 import os, sys
 
 ####
-# write a station list (name, lat, lon) for seed2cor
-# NOTE that this is for the old version of seed2cor; I think the new version wants (name, lon, lat)??
+# write a station list (name, lat, lon) for seed2cor [OLD VERSION]
+# NOTE that the new version wants (name, lon, lat)?? so that's what we do now.
 ####
 
 # get all the station info
