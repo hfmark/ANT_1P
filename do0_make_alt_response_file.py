@@ -17,7 +17,7 @@ inv_all = Inventory(networks=[],source='IRIS_ENAP')
 client = Client('IRIS')
 
 # C, C1, G, XB, *and* 1P
-inv = client.get_stations(network='C,C1,G,XB,1P', channel='LH?', level='channel',\
+inv = client.get_stations(network='C,C1,G,XB,1P', channel='LH?', level='response',\
             minlatitude=-55.5, maxlatitude=-43.1,\
             minlongitude=-76.3, maxlongitude=-65.3)
 
@@ -25,7 +25,7 @@ for net in inv.networks:
     inv_all.networks.append(net)  # add all of the simpler networks
 
 # AI, which requires other channel names and renaming
-inv = client.get_stations(network='AI',station='DSPA',channel='MH?',level='channel',\
+inv = client.get_stations(network='AI',station='DSPA',channel='MH?',level='response',\
             minlatitude=-55.5, maxlatitude=-43.1,\
             minlongitude=-76.3, maxlongitude=-65.3)
 
@@ -42,7 +42,7 @@ inv_all.networks.append(AI_net)
 
 # YJ, which requires creating LHE/LHN for some of the stations
 yj_rotate = ['IBJ01','IMG01','MEL01','RMB02']
-inv = client.get_stations(network='YJ',channel='LH?',level='channel',\
+inv = client.get_stations(network='YJ',channel='LH?',level='response',\
             minlatitude=-55.5, maxlatitude=-43.1,\
             minlongitude=-76.3, maxlongitude=-65.3)
 YJ_net = inv.networks[0].select(station='X').copy()
