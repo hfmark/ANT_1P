@@ -44,9 +44,10 @@ for i in range(len(days)):
 
     mseed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.mseed'
     seed_ofile = 'seed/dayfiles/PAT_' + d.strftime('%Y.%m.%d') + '.seed'
-    if os.path.isfile(mseed_ofile) and os.path.isfile(seed_ofile):
+    if os.path.isfile(seed_ofile):
         continue  # skip days that are done already
-        # NOTE that if you want to redo days you need to delete existing files
+        # NOTE that if you want to redo days you need to delete existing *seed* files
+        # miniseed don't count
 
     mseed_list = []
     if d in P_days:
