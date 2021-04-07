@@ -12,7 +12,6 @@ import os, sys
     # get list of unique months
     # for each overlapping set of 3 months, write a list of just those daily files
 # write some lists of lists for running things?
-# NOTE currently YJ stations are not included in tellus lists because they don't need re-running
 ####
 
 pairs = np.array(glob('COR/*/'))
@@ -79,10 +78,10 @@ for i in range(nlist):
     while lsum < per_list and j < len(fnames):
         middle = fnames[j].split('/')[-1][:-3]
         firststa = middle.split('_')[0]
-        if len(firststa) == 4:  # this is NOT a YJ station
-            fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+        #if len(firststa) == 4:  # this is NOT a YJ station
+        fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
 
-            lsum += 1
+        lsum += 1
         j += 1
 
     fout.close()
