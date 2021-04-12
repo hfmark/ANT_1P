@@ -26,20 +26,10 @@ for net in inv.networks:
     inv_all.networks.append(net)  # add all of the simpler networks
 
 
-# 1P, which requires GUMN and OHRS be manually set to T120
-inv = client.get_stations(network='1P', channel='LH?', level='response',\
-            minlatitude=-55.5, maxlatitude=-43.1,\
-            minlongitude=-76.3, maxlongitude=-65.3)
-
-horizon_sta = ['GUMN','OHRS']
-GUA = inv.networks[0].select(station='X').copy()
-for ista in inv.networks[0].stations:
-    sta = inv.networks[0].select(station=ista.code).stations[0]
-    if ista.code in horizon_sta:
-        newsta = _read_seed('seed/dataless/IRISDMC-%s.1P.dataless' % (ista.code))
-        sta = newsta.networks[0].stations[0]
-    GUA.stations.append(sta)
-inv_all.networks.append(GUA)
+# 1P, which is read from Patrick's file (at least until DMC is updated with horizons)
+inv = _read_seed('seed/dataless/1P.20.patadb.202104092300.dataless')
+# will have junk of lots of channels not being used but oh well
+inv_all.networks.append(inv.networks[0])
 
 # AI, which requires other channel names and renaming
 inv = client.get_stations(network='AI',station='DSPA',channel='MH?',level='response',\
