@@ -70,6 +70,26 @@ total = len(nln)  # instead of lines of lines, just lines
 #nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
 per_list = 600; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
 
+# temporary addition to make stacking lists just for specific stations that need restacking
+fg = open('tellus_lists/list_GUMN.dat', 'w')
+fo = open('tellus_lists/list_OHRS.dat', 'w')
+for j in range(len(fnames)):
+    sta1 = fnames[j].split('/')[1].split('_')[0]
+    sta2 = fnames[j].split('/')[1].split('_')[1]
+    middle = fnames[j].split('/')[-1][:-3]
+    if sta1 == 'GUMN' or sta2 == 'GUMN':
+        fg.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+    elif sta1 == 'OHRS' or sta2 == 'OHRS':
+        fo.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+
+fg.close()
+fo.close()
+
+
+
+sys.exit()
+
+
 j = 0
 for i in range(nlist):
     fout = open('tellus_lists/list_%i.dat' % i,'w')
