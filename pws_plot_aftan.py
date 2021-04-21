@@ -7,6 +7,7 @@ from scipy.interpolate import interp1d, griddata
 from copy import copy
 from glob import glob
 from obspy import read, read_inventory
+import cartopy.crs as ccrs
 import os, sys
 
 ####
@@ -151,14 +152,14 @@ def get_sta_coords(sta,inv):
     ista = inv.select(station=sta).networks[0].stations[0]
     return ista.latitude, ista.longitude
 
-def get_ndays(sta1,sta2,root='COR/'):
+def get_ndays(sta1,sta2,root='COR/stacks/'):
     """
     get number of stacked days in xcor for a pair of stations from sac header
     """
-    fname = os.path.join(root,'COR_%s_%s_full.SAC_s' % (sta1,sta2))
+    fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn' % (sta1,sta2))
     if not os.path.isfile(fname):
         sta1, sta2 = sta2, sta1
-        fname = os.path.join(root,'COR_%s_%s_full.SAC_s' % (sta1,sta2))
+        fname = os.path.join(root,'tf_%s_%s_full_hdr.sacn' % (sta1,sta2))
         if not os.path.isfile(fname):
             print('no symmetric xcor file found for %s, %s' % (sta1, sta2))
             return
@@ -173,7 +174,7 @@ if __name__ == '__main__':
     sta1_list = [e.split('/')[-1].split('_')[1] for e in done_list]
     sta2_list = [e.split('/')[-1].split('_')[2].split('.')[0] for e in done_list]
 
-    pdfpath = 'FTAN_plots.pdf'
+    pdfpath = os.path.expanduser('~/Patagonia/Plots/FTAN_plots.pdf')
     if os.path.isfile(pdfpath):
         iq = input('%s exists. Overwrite? y/[n]' % pdfpath) or 'n'
         if iq == 'n': sys.exit()
@@ -262,14 +263,16 @@ if __name__ == '__main__':
         ax3.set_ylim(vmin,vmax)
 
         #### station map
-        #gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
-        #ax4 = fig.add_subplot(gs4[0,0])
+        gs4 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
+        ax4 = fig.add_subplot(gs4[0,0],projection=ccrs.PlateCarree())
+        ax4.coastlines(resolution='50m',color='grey')
+        ax4.set_extent((-76,-67.5,-55,-43))
         #plot_basemap(ax4)
-        #ll1 = get_sta_coords(sta1,inv); ll2 = get_sta_coords(sta2,inv); nm = (sta1,sta2)
-        #x = (ll1[1],ll2[1]); y = (ll1[0],ll2[0])
-        #ax4.plot(x,y,'^-',color='k',ms=10,mfc='w',mew=1,zorder=100)
-        #for lon,lat,label in zip(x, y, nm):
-        #    ax4.text(lon, lat, label, ha='center', va='bottom', fontsize=7, weight='bold')
+        ll1 = get_sta_coords(sta1,inv); ll2 = get_sta_coords(sta2,inv); nm = (sta1,sta2)
+        x = (ll1[1],ll2[1]); y = (ll1[0],ll2[0])
+        ax4.plot(x,y,'^-',color='k',ms=10,mfc='w',mew=1,zorder=100)
+        for lon,lat,label in zip(x, y, nm):
+            ax4.text(lon, lat, label, ha='center', va='bottom', fontsize=7, weight='bold')
 
         #### nominal vs observed periods
         gs5 = gridspec.GridSpec(1,1,wspace=0.2,hspace=0.0)
@@ -284,15 +287,15 @@ if __name__ == '__main__':
         # make things not overlap
         gs2.update(left=0.1,right=0.4)
         gs3.update(left=0.45,right=0.75)
-        #gs4.update(left=0.84,right=0.98,bottom=0.50)
+        gs4.update(left=0.84,right=0.98,bottom=0.50)
         gs5.update(left=0.84,right=0.98,top=0.44)
 
         # plot title
-        #ndays = get_ndays(sta1,sta2)
-        #fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1,inv), sta1, \
-        #            find_sta_network(sta2,inv), sta2, dist, ndays), fontsize=14)
-        fig.suptitle('%s.%s - %s.%s: %.2f km' % (find_sta_network(sta1,inv), sta1, \
-                    find_sta_network(sta2,inv), sta2, dist), fontsize=14)
+        ndays = get_ndays(sta1,sta2)
+        fig.suptitle('%s.%s - %s.%s: %.2f km, %i days' % (find_sta_network(sta1,inv), sta1, \
+                    find_sta_network(sta2,inv), sta2, dist, ndays), fontsize=14)
+        #fig.suptitle('%s.%s - %s.%s: %.2f km' % (find_sta_network(sta1,inv), sta1, \
+        #            find_sta_network(sta2,inv), sta2, dist), fontsize=14)
 
         pdf.savefig(fig)
         plt.close()
