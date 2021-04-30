@@ -22,8 +22,29 @@ inv = client.get_stations(network='C,C1,G,XB', channel='LH?', level='response',\
             minlatitude=-55.5, maxlatitude=-43.1,\
             minlongitude=-76.3, maxlongitude=-65.3)
 
+# deal with AY03: 120P up until 2 Nov 2017 (or 11 Feb?), T40 after (T40 response is on DMC)
+i2 = _read_seed('seed/dataless/IRISDMC-AY03.C1.dataless')
+sta = inv.select(station='AY03').networks[0].stations[0]
+ch_list_add = deepcopy(i2.networks[0].stations[0].channels)
+ch_list_init = deepcopy(sta.channels)
+
+for ch in ch_list_init:
+    ch.start_date = UTCDateTime('2017-11-02')  # or is it 2017-02-11???
+
+for ch in ch_list_add:
+    ch.end_date = UTCDateTime('2017-11-02')
+    ch_list_init.append(ch)
+
+# somehow find AY03 in the overall inv and replace the channel list
+codes = np.array([e.code for e in inv.networks])
+inet = np.where(codes == 'C1')[0][0]
+nms = np.array([e.code for e in inv.networks[inet].stations])
+ista = np.where(nms == 'AY03')[0][0]
+inv.networks[inet].stations[ista].channels = ch_list_init
+
+# add all these networks to the main inventory
 for net in inv.networks:
-    inv_all.networks.append(net)  # add all of the simpler networks
+    inv_all.networks.append(net)
 
 
 # 1P, which is read from Patrick's file (at least until DMC is updated with horizons)
@@ -77,6 +98,11 @@ for f in E_file:
         ch.code = 'L' + ch.code[1:]
     E_net.stations.append(nsta.networks[0].stations[0])
 inv_all.networks.append(E_net)
+
+esta = read_inventory('seed/dataless/ENAP-ANMA.EN.xml')
+for ch in esta.networks[0].stations[0].channels:
+    ch.code = 'L' + ch.code[1:]
+inv_all.networks[-1].stations.append(esta.networks[0].stations[0])
 
 # write everything!
 inv_all.write('seed/dataless/combined.xml',format='stationxml')
