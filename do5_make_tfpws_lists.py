@@ -68,7 +68,7 @@ total = nln[-1]; nln = nln[:-1]; fnames = fnames[:-1]  # get rid of "total" line
 total = len(nln)  # instead of lines of lines, just lines
 
 #nlist  = 12; per_list = int(total/nlist)  # approximate # lines per list
-per_list = 600; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
+per_list = 300; nlist = int(total/per_list) + 1  # assuming not a multiple of 1200 exactly
 
 
 # temporary addition for AY03/ANMA, to speed things up a bit
