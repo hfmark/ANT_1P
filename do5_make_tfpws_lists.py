@@ -79,7 +79,7 @@ for j in range(len(fnames)):
     sta2 = fnames[j].split('/')[1].split('_')[1]
     middle = fnames[j].split('/')[-1][:-3]
     if sta1 in ['AY03','ANMA'] or sta2 in ['AY03','ANMA']:
-        fg.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
+        fout.write('%s rm wu=0.5 tls=/master-ssd/hmark/tl_%s.sacn tfpws=/master-ssd/hmark/tf_%s.sacn\n' % (fnames[j],middle,middle))
         lsum += 1
     if lsum == per_list:
         lsum = 0
