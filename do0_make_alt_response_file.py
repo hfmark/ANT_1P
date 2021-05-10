@@ -23,24 +23,26 @@ inv = client.get_stations(network='C,C1,G,XB', channel='LH?', level='response',\
             minlongitude=-76.3, maxlongitude=-65.3)
 
 # deal with AY03: 120P up until 2 Nov 2017 (or 11 Feb?), T40 after (T40 response is on DMC)
+# UPDATE: AY03 seems to have always been a 120P so we will go with that
 i2 = _read_seed('seed/dataless/IRISDMC-AY03.C1.dataless')
-sta = inv.select(station='AY03').networks[0].stations[0]
-ch_list_add = deepcopy(i2.networks[0].stations[0].channels)
-ch_list_init = deepcopy(sta.channels)
+#sta = inv.select(station='AY03').networks[0].stations[0]
+#ch_list_add = deepcopy(i2.networks[0].stations[0].channels)
+#ch_list_init = deepcopy(sta.channels)
 
-for ch in ch_list_init:
-    ch.start_date = UTCDateTime('2017-11-02')  # or is it 2017-02-11???
+#for ch in ch_list_init:
+#    ch.start_date = UTCDateTime('2017-11-02')  # or is it 2017-02-11???
 
-for ch in ch_list_add:
-    ch.end_date = UTCDateTime('2017-11-02')
-    ch_list_init.append(ch)
+#for ch in ch_list_add:
+#    ch.end_date = UTCDateTime('2017-11-02')
+#    ch_list_init.append(ch)
 
 # somehow find AY03 in the overall inv and replace the channel list
 codes = np.array([e.code for e in inv.networks])
 inet = np.where(codes == 'C1')[0][0]
 nms = np.array([e.code for e in inv.networks[inet].stations])
 ista = np.where(nms == 'AY03')[0][0]
-inv.networks[inet].stations[ista].channels = ch_list_init
+#inv.networks[inet].stations[ista].channels = ch_list_init
+inv.networks[inet].stations[ista] = i2.networks[0].stations[0]
 
 # add all these networks to the main inventory
 for net in inv.networks:
