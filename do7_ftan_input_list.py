@@ -36,7 +36,7 @@ pp = np.arange(minp,maxp+1)
 minv = 1.7; maxv = 5.2;
 minSNR = 5;
 
-thresh = 20;
+thresh = 15;
 ffact = 1; taperl = 0.5; fsnr = 0.2; fmatch = 2;
 
 per_file = 1000
