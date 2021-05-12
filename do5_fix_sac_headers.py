@@ -10,7 +10,7 @@ import os, sys
 # putting b=0 and e=3000 into stats.sac (solves the time problem). The rest seems ok.
 ####
 
-corfiles = np.sort(glob('COR/stacks/tf*sacn'))
+corfiles = np.sort(glob('COR/stacks/tf*AY03*sacn'))
 
 for fname in corfiles:
     st = read(fname)
